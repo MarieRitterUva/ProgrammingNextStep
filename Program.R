@@ -34,7 +34,7 @@ C.init <- 0  # craving at time 0
 
 A.init <- 0.5 * q  # consumption at time 0
 
-weeks <- 40  # number of weeks
+weeks <- 60  # number of weeks
 
 lamda.init <- 0.5  # intensity of external influences
 
@@ -125,11 +125,52 @@ SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b
 
 # build output dataframe
 
-BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V) {
+BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V, print = TRUE) {
         output <- data.frame("t" = (1: (weeks+1))-1,  "A" = A, "C" = Crav, "S" = S,
                              "E" = E, "lamda" = lamda, "cues" = cues, "V" = V)
-        return(output)
+        sim.output <<- output
+        if (print == TRUE) {
+                return(output)
+        }
 }
+
+
+
+# GRAPHS
+
+# SINGLE PLOTS
+# addictive acts
+plot(sim.output$t, sim.output$A,
+     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+     type = "l", ylab = "A(t)",
+     main = "Frequency of addictive acts A(t) over time")
+
+# self-control
+plot(sim.output$t,sim.output$S,
+     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+     type = "l", ylab = "S(t)",
+     main = "Self-control over time")
+
+# craving
+plot(sim.output$t,sim.output$C,
+     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+     type = "l", ylab = "C(t)",
+     main = "Craving C(t) over time")
+
+# vulnerability
+plot(sim.output$t, sim.output$V,
+     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+     type = "l", ylab = "V(t)",
+     main = "Vulnerability V(t) over time")
+
+# DOUBLE PLOTS
+# S and V
+
+# A and C
+
+
+# Bifurcation diagrams
+# 
 
 ###############################################################################
 # initializing
@@ -146,7 +187,7 @@ SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plu
 
 # get output
 
-BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V)
+BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V, print = FALSE)
 
 
 ###############################################################################
