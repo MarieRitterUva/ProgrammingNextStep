@@ -1,0 +1,5 @@
+- For loop in SimulateAddictionComponents() stops after executing the first few steps of the equation
+----> Took global assignment out of For loop, extra in function (possibly there is a smarter way?) --> works now
+
+NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
+!!!! Please take out after testing phases

@@ -2,7 +2,6 @@
 ## Marie Ritter - UvA
 
 # ToDo: GRAPHS!
-# ToDo: Set default for init functions?
 # ToDO: Calculation of parameters?!
 # ToDo: Multiple simulations
 # ToDo: Success output
@@ -35,7 +34,7 @@ C.init <- 0  # craving at time 0
 
 A.init <- 0.5 * q  # consumption at time 0
 
-weeks <- 20  # number of weeks
+weeks <- 40  # number of weeks
 
 lamda.init <- 0.5  # intensity of external influences
 
