@@ -2,7 +2,6 @@
 ## Marie Ritter - UvA
 
 # ToDo: GRAPHS!
-# ToDo: Functions out of thing
 # ToDo: Set default for init functions?
 # ToDO: Calculation of parameters?!
 # ToDo: Multiple simulations
@@ -46,7 +45,7 @@ lamda.init <- 0.5  # intensity of external influences
 # calculate parameters
 # - needs to be done in beginning and if input parameters change
 
-CalculateParameters <- function (p, S.plus, q) {
+CalculateParameters <- function (p = 0.4, S.plus = 0.5, q = 0.8) {
         d <<- p/2
         k <<- (p * S.plus) / q
         h <<- p * S.plus
@@ -58,7 +57,7 @@ CalculateParameters <- function (p, S.plus, q) {
 # - needs to be done in beginning and if input parameters change
 
 InitializeVectors <- 
-        function (C.init, S.plus, E.init, lamda.init, A.init, weeks) {
+        function (C.init = 0, S.plus = 0.5, E.init = 0, lamda.init = 0.5, A.init = 0.4, weeks = 20) {
         
         Crav <<- numeric(length = weeks+1)
         Crav[1] <- C.init
