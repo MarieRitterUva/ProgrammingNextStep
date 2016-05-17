@@ -1,5 +1,20 @@
 - For loop in SimulateAddictionComponents() stops after executing the first few steps of the equation
-----> Took global assignment out of For loop, extra in function (possibly there is a smarter way?) --> works now
+SOLVED: ----> Took global assignment out of For loop, extra in function (possibly there is a smarter way?) --> works now
+
+At the moment only one function for all Graphs
+!! Problem: Can Shiny take multiple graphs? If not, need to be saved somewher (png --> Can Shiny save and access)
+!! Maybe better to have separate functions for speed?
 
 NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
 !!!! Please take out after testing phases
+
+NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could be added later quite easily)
+
+
+
+
+---------------------------------------------------------
+
+Questions for Han van der Maas:
+- Which parameters should be input? Which can be calculated? Parameter boundaries?
+- Bifurcation diagrams

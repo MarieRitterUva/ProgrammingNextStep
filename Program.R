@@ -1,16 +1,22 @@
-## Programming: The next step - Simulating Addiction with Differential Equations
+## Programming: The next step - Simulating Addiction with Difference Equations
 ## Marie Ritter - UvA
 
-# ToDo: GRAPHS!
 # ToDO: Calculation of parameters?!
 # ToDo: Multiple simulations
-# ToDo: Success output
-# ToDo: Offer possibility of treatment weeks (if-statements, etc.)
-# ToDo: Write input ifs
+  # array saving, adjust output functions
+# ToDo: Bifurcation diagrams
+
+# ToDo: Treatment - new display logic
+  # Treatment Weeks (if statements)
+  # Success output
+
+# ToDo: Write input ifs, error handling, error messages
+# ToDo: Have all functions in separate file to source them in Shiny
 # ToDO: Simple GUI input and output
 # ToDo: Display Logic GUI
 # ToDo: Speed of Simulation
 # ToDo: Beautify GUI
+# ToDo: Saving graphs and output
 # ToDo: Manual and Instructions
 
 #############################################################################
@@ -34,7 +40,7 @@ C.init <- 0  # craving at time 0
 
 A.init <- 0.5 * q  # consumption at time 0
 
-weeks <- 60  # number of weeks
+weeks <- 250  # number of weeks
 
 lamda.init <- 0.5  # intensity of external influences
 
@@ -100,11 +106,13 @@ SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b
                 # calculate V(t+1)
                 V[i+1] <- min(c(1, max(c(0, Crav[i] - S[i] - E[i]))))
                 
-                # calculate A(t+1) with random component
+                # calculate A(t+1)
+                # generate random component (cues)
                 set.seed(1)  # for testing purposes - TAKE OUT AT THE END!!!
                 cues[i] <- rpois(1, lamda[i])
                 f <- cues[i] * (q/7)
                 
+                # calculate A(t+1)
                 if (f <= (q * (1 - V[i])) ) {  # stay under max
                         
                         A[i+1] <- q * V[i] + f
@@ -138,36 +146,62 @@ BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V, print = 
 
 # GRAPHS
 
-# SINGLE PLOTS
-# addictive acts
-plot(sim.output$t, sim.output$A,
-     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-     type = "l", ylab = "A(t)",
-     main = "Frequency of addictive acts A(t) over time")
-
-# self-control
-plot(sim.output$t,sim.output$S,
-     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-     type = "l", ylab = "S(t)",
-     main = "Self-control over time")
-
-# craving
-plot(sim.output$t,sim.output$C,
-     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-     type = "l", ylab = "C(t)",
-     main = "Craving C(t) over time")
-
-# vulnerability
-plot(sim.output$t, sim.output$V,
-     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-     type = "l", ylab = "V(t)",
-     main = "Vulnerability V(t) over time")
-
-# DOUBLE PLOTS
-# S and V
-
-# A and C
-
+MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
+                        V.plot = FALSE, SV.plot = FALSE, AC.plot = FALSE) {
+        # SINGLE PLOTS
+        # addictive acts
+        if (A.plot == TRUE) {
+        plot(sim.output$t, 100*(sim.output$A),
+             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+             type = "l", ylab = "A(t) in alcoholic beverages",
+             main = "Frequency of addictive acts A(t) over time")
+        }
+        
+        # self-control
+        if (S.plot == TRUE) {
+        plot(sim.output$t,sim.output$S,
+             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+             type = "l", ylab = "S(t)",
+             main = "Self-control over time")
+        }
+        
+        # craving
+        if (C.plot == TRUE) {
+        plot(sim.output$t,sim.output$C,
+             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+             type = "l", ylab = "C(t)",
+             main = "Craving C(t) over time")
+        }
+        
+        # vulnerability
+        if (V.plot == TRUE) {
+        plot(sim.output$t, sim.output$V,
+             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+             type = "l", ylab = "V(t)",
+             main = "Vulnerability V(t) over time")
+        }
+        
+        # DOUBLE PLOTS
+        # S and V
+        if (SV.plot == TRUE) {
+                plot(sim.output$t, sim.output$V,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "V(t) and S(t)",
+                     main = "Vulnerability V(t) and Self-Control S(t) over time")
+                lines(sim.output$t, sim.output$S, lty = 2, lwd = 2)
+                legend("bottomright", legend = c("S(t)", "V(t"), lty = c(2, 1), lwd = 2)
+        }
+        
+        # A and C
+        if (AC.plot == TRUE) {
+                plot(sim.output$t, sim.output$A,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "A(t) and C(t)",
+                     main = "Addictive acts A(t) and craving C(t) over time")
+                lines(sim.output$t, sim.output$C, lty = 2, lwd = 2)
+                legend("bottomright", legend = c("C(t)", "A(t"), lty = c(2, 1), lwd = 2)
+        }
+}
 
 # Bifurcation diagrams
 # 
@@ -188,6 +222,8 @@ SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plu
 # get output
 
 BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V, print = FALSE)
+
+MakeGraphs(V.plot = TRUE)
 
 
 ###############################################################################
