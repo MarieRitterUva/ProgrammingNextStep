@@ -34,13 +34,13 @@ E.init <- 0  # external influences
 
 S.plus <- 0.5  # maximum self-control
 
-p <- 0.4  # resilience parameter
+d <- 0.2  # decay of craving
 
 C.init <- 0  # craving at time 0
 
 A.init <- 0.5 * q  # consumption at time 0
 
-weeks <- 250  # number of weeks
+weeks <- 15  # number of weeks
 
 lamda.init <- 0.5  # intensity of external influences
 
@@ -51,7 +51,7 @@ lamda.init <- 0.5  # intensity of external influences
 # - needs to be done in beginning and if input parameters change
 
 CalculateParameters <- function (p = 0.4, S.plus = 0.5, q = 0.8) {
-        d <<- p/2
+        p <<- 2*d  # resilience parameter
         k <<- (p * S.plus) / q
         h <<- p * S.plus
         b <<- (2*d) / q
@@ -153,7 +153,7 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         if (A.plot == TRUE) {
         plot(sim.output$t, 100*(sim.output$A),
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = "A(t) in alcoholic beverages",
+             type = "l", ylab = "A(t) in alcoholic beverages", ylim = c(0, 100*q),
              main = "Frequency of addictive acts A(t) over time")
         }
         
@@ -161,7 +161,7 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         if (S.plot == TRUE) {
         plot(sim.output$t,sim.output$S,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = "S(t)",
+             type = "l", ylab = "S(t)", ylim = c(0,S.plus),
              main = "Self-control over time")
         }
         
@@ -177,7 +177,7 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         if (V.plot == TRUE) {
         plot(sim.output$t, sim.output$V,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = "V(t)",
+             type = "l", ylab = "V(t)", ylim = c(0,1),
              main = "Vulnerability V(t) over time")
         }
         
@@ -221,9 +221,9 @@ SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plu
 
 # get output
 
-BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V, print = FALSE)
+BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V, print = TRUE)
 
-MakeGraphs(V.plot = TRUE)
+MakeGraphs(AC.plot = TRUE)
 
 
 ###############################################################################
