@@ -2,7 +2,7 @@
 SOLVED: Took global assignment out of For loop, extra in function (possibly there is a smarter way?) --> works now
 
 At the moment only one function for all Graphs
-!! Problem: Can Shiny take multiple graphs? If not, need to be saved somewher (png --> Can Shiny save and access)
+!! Problem: Can Shiny take multiple graphs? If not, need to be saved somewhere (png --> Can Shiny save and access)
 !! Maybe better to have separate functions for speed?
 
 NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
@@ -10,13 +10,12 @@ NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
 
 NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could be added later quite easily)
 
+NOTE: At the moment only CalculateParameters and InitializeVectors have default parameters, possibly a problem; possibly set defaults in GUI NOT in program
+
 
 
 
 ---------------------------------------------------------
-
-Questions for Han van der Maas:
-- Which parameters should be input? --> d as input - b and p derived from d
 - Parameter boundaries? d between 0 and 1 (make note in GUI that most realistic lies around .2)
 - Bifurcation diagrams (simulate many times (burn first samples) -> Plot (like RLABS video YouTube)
   --> Possibly make different tab for Bifurcation diagrams (start with E as bifurcation parameter, possibility to use another parameter)

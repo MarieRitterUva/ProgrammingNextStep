@@ -42,11 +42,11 @@ C.init <- 0  # craving at time 0
 
 A.init <- 0.5 * q  # consumption at time 0
 
-weeks <- 15  # number of weeks
+weeks <- 10  # number of weeks
 
 lamda.init <- 0.5  # intensity of external influences
 
-no.simulations <- 3  # how many times simulation should be run
+no.simulations <- 10  # how many times simulation should be run
 
 #############################################################################
 # Functions
