@@ -32,15 +32,15 @@ setwd("/home/marie/Dokumente/Uni/Courses/Programming/Repo/ProgrammingNextStep")
 
 q <- 0.8  # maximum consumption
 
-E.init <- 0  # external influences
+E.init <- 0  # external influences (-1, 1)
 
-S.plus <- 0.5  # maximum self-control
+S.plus <- 0.5  # maximum self-control (0, 1)
 
-d <- 0.2  # decay of craving
+d <- 0.2  # decay of craving (0,1)
 
 C.init <- 0  # craving at time 0
 
-A.init <- 0.5 * q  # consumption at time 0
+A.init <- 0.5 * q  # consumption at time 0 (0, 1), actually factor is parameter, add calculate function later
 
 weeks <- 10  # number of weeks
 
@@ -54,7 +54,7 @@ no.simulations <- 10  # how many times simulation should be run
 # calculate parameters
 # - needs to be done in beginning and if input parameters change
 
-CalculateParameters <- function (p = 0.4, S.plus = 0.5, q = 0.8) {
+CalculateParameters <- function (d = 0.2, S.plus = 0.5, q = 0.8) {
         p <<- 2*d  # resilience parameter
         k <<- (p * S.plus) / q
         h <<- p * S.plus
@@ -252,4 +252,3 @@ MakeGraphs(S.plot = TRUE)
 
 
 ###############################################################################
-
