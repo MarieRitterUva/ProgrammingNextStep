@@ -13,7 +13,7 @@ NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could 
 
 NOTE: At the moment only CalculateParameters and InitializeVectors have default parameters, possibly a problem; possibly set defaults in GUI NOT in program
 
-
+NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
 
 
 ---------------------------------------------------------

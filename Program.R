@@ -1,8 +1,6 @@
 ## Programming: The next step - Simulating Addiction with Difference Equations
 ## Marie Ritter - UvA
 
-# ToDo: Multiple simulations
-  # adjust output functions
 # ToDo: Bifurcation diagrams
 
 # ToDo: Treatment - new display logic
@@ -32,7 +30,7 @@ setwd("/home/marie/Dokumente/Uni/Courses/Programming/Repo/ProgrammingNextStep")
 
 q <- 0.8  # maximum consumption
 
-E.init <- 0  # external influences (-1, 1)
+E.init <- 1  # external influences (-1, 1)
 
 S.plus <- 0.5  # maximum self-control (0, 1)
 
@@ -42,11 +40,11 @@ C.init <- 0  # craving at time 0
 
 A.init <- 0.5 * q  # consumption at time 0 (0, 1), actually factor is parameter, add calculate function later
 
-weeks <- 10  # number of weeks
+weeks <- 100  # number of weeks
 
 lamda.init <- 0.5  # intensity of external influences
 
-no.simulations <- 10  # how many times simulation should be run
+no.simulations <- 100  # how many times simulation should be run
 
 #############################################################################
 # Functions
@@ -66,7 +64,8 @@ CalculateParameters <- function (d = 0.2, S.plus = 0.5, q = 0.8) {
 # - needs to be done in beginning and if input parameters change
 
 InitializeVectors <- 
-        function (C.init = 0, S.plus = 0.5, E.init = 0, lamda.init = 0.5, A.init = 0.4, weeks = 20) {
+        function (C.init = 0, S.plus = 0.5, E.init = 0, lamda.init = 0.5, A.init = 0.4,
+                  weeks = 20, no.simulations = 100) {
         
         Crav <<- numeric(length = weeks+1)
         Crav[1] <- C.init
@@ -94,7 +93,7 @@ InitializeVectors <-
         A <<- numeric(length = weeks+1)
         A[1] <<- A.init
         
-        addiction <<- logical(weeks+1)
+        addiction.end <<- logical(no.simulations)
 }
 
 
@@ -114,7 +113,7 @@ SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b
                 
                 # calculate A(t+1)
                 # generate random component (cues)
-                set.seed(1)  # for testing purposes - TAKE OUT AT THE END!!!
+                # set.seed(1)  # for testing purposes - TAKE OUT AT THE END!!!
                 cues[i] <- rpois(1, lamda[i])
                 f <- cues[i] * (q/7)
                 
@@ -128,10 +127,10 @@ SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b
                 }
         }
         
-        if (V[weeks+1] == 1) {
-                addiction[weeks+1] <- TRUE
+        if (V[weeks+1] != 1) {
+                addiction <- FALSE
         } else {
-                addiction[weeks+1] <- FALSE
+                addiction <- TRUE
         }
         
         cues <<- cues
@@ -151,23 +150,28 @@ InitializeList <- function () {
 
 # build output dataframe
 
-BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V, addiction) {
+BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V) {
         output <- data.frame("t" = (1: (weeks+1))-1,  "A" = A, "C" = Crav, "S" = S,
                              "E" = E, "lamda" = lamda, "cues" = cues, "V" = V)
         df.output <<- output
 }
 
-BuildOutputList <- function (loop) {
-        output.success <- list(df.output, addiction[loop])  # includes success data
+BuildOutputList <- function () {
+        output.success <- list(df.output, addiction)  # includes success data
         output.addition <- c(list.output, list(output.success))  # adds the new data to the list
         list.output <<- output.addition
 }
 
+BuildVectorOutcome <- function (loop) {
+        addiction.end[loop] <- addiction
+        addiction.end <<- addiction.end
+}
+
 CalculateSuccess <- function () {
-        success.percent <- (max(0, (sum(addiction == FALSE) - 1)) / weeks) * 100
-        trials.success <- ((which(addiction == FALSE))[-1] - 1)  # discard first number for week 0
+        success.percent <- (max(0, (sum(addiction.end == FALSE) - 1)) / weeks) * 100
+        trials.success <- ((which(addiction.end == FALSE))[-1] - 1)  # discard first number for week 0
                                                                  # substract one to get actual week number
-        trials.fail <- ((which(addiction == TRUE))[-1] - 1)
+        trials.fail <- ((which(addiction.end == TRUE))[-1] - 1)
         
         success.percent <<- success.percent
         trials.success <<- trials.success
@@ -178,6 +182,7 @@ CalculateSuccess <- function () {
 
 # GRAPHS
 
+# Graphs over time
 MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
                         V.plot = FALSE, SV.plot = FALSE, AC.plot = FALSE,
                         successfull = TRUE) {
@@ -274,14 +279,53 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
 }
 
 # Bifurcation diagrams
-# 
+
+MakeBifurcationDiagram <- function () {
+        x <- 1
+}
+
+bifurc.para <- "E"
+Y <- "C"
+min <- -1
+max <- 1
+sequence <- seq(min, max, 0.1)  # E for now
+# burn 50 weeks, simulate 250
+# empty plot
+plot(c(min, max), c(0, 1), type = "n", pch = ".", xlab = bifurc.para, ylab = Y,
+     bty = "n", las = 1)
+
+for (E.bifur in sequence) {
+        
+        CalculateParameters(d, S.plus, q)
+        
+        InitializeVectors(C.init, S.plus, E.bifur, lamda.init, A.init, weeks)
+        
+        InitializeList()
+        
+        for (i in 1:250) {
+                SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plus, h, k, q)
+                
+                # get output
+                BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V)
+                
+                # save output in list
+                BuildOutputList(i)
+        }
+        
+        for (i in 100:250) {
+        points(rep(E.bifur, length(list.output[[i]][[1]]$C)), list.output[[i]][[1]]$C)
+        }
+        
+}
+
+
 
 ###############################################################################
 # initializing
 
 CalculateParameters(d, S.plus, q)
 
-InitializeVectors(C.init, S.plus, E.init, lamda.init, A.init, weeks)
+InitializeVectors(C.init, S.plus, E.init, lamda.init, A.init, weeks, no.simulations)
 
 InitializeList()
 
@@ -293,13 +337,15 @@ for (i in 1:no.simulations) {
         BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V)
         
         # save output in list
-        BuildOutputList(i)
+        BuildOutputList()
+        
+        BuildVectorOutcome(i)
 }
 
 CalculateSuccess()
 
 
-MakeGraphs(AC.plot = TRUE)
+MakeGraphs(V.plot = TRUE, successfull = FALSE)
 
 
 ###############################################################################
