@@ -4,6 +4,7 @@ SOLVED: Took global assignment out of For loop, extra in function (possibly ther
 At the moment only one function for all Graphs
 !! Problem: Can Shiny take multiple graphs? If not, need to be saved somewhere (png --> Can Shiny save and access)
 !! Maybe better to have separate functions for speed?
+SOLVED: Have option to display only one graphs (also interface is less crowded), but possibility to save graphs
 
 NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
 !!!! Please take out after testing phases
@@ -12,7 +13,7 @@ NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could 
 
 NOTE: At the moment only CalculateParameters and InitializeVectors have default parameters, possibly a problem; possibly set defaults in GUI NOT in program
 
-
+NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
 
 
 ---------------------------------------------------------

@@ -2,8 +2,9 @@
 SOLVED: Took global assignment out of For loop, extra in function (possibly there is a smarter way?) --> works now
 
 At the moment only one function for all Graphs
-!! Problem: Can Shiny take multiple graphs? If not, need to be saved somewher (png --> Can Shiny save and access)
+!! Problem: Can Shiny take multiple graphs? If not, need to be saved somewhere (png --> Can Shiny save and access)
 !! Maybe better to have separate functions for speed?
+SOLVED: Have option to display only one graphs (also interface is less crowded), but possibility to save graphs
 
 NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
 !!!! Please take out after testing phases

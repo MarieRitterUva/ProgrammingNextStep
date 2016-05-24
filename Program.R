@@ -165,67 +165,111 @@ BuildOutputList <- function (loop) {
 
 CalculateSuccess <- function () {
         success.percent <- (max(0, (sum(addiction == FALSE) - 1)) / weeks) * 100
+        trials.success <- ((which(addiction == FALSE))[-1] - 1)  # discard first number for week 0
+                                                                 # substract one to get actual week number
+        trials.fail <- ((which(addiction == TRUE))[-1] - 1)
         
         success.percent <<- success.percent
+        trials.success <<- trials.success
+        trials.fail <<- trials.fail
+        
 }
 
 
 # GRAPHS
 
 MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
-                        V.plot = FALSE, SV.plot = FALSE, AC.plot = FALSE) {
+                        V.plot = FALSE, SV.plot = FALSE, AC.plot = FALSE,
+                        successfull = TRUE) {
         # SINGLE PLOTS
         # addictive acts
-        if (A.plot == TRUE) {
-        plot(list.output[[1]][[1]]$t, 100*(list.output[[1]][[1]]$A),
+        if (A.plot == TRUE & successfull == TRUE) {
+        plot(list.output[[ trials.success[1] ]][[1]]$t, 100*(list.output[[ trials.success[1] ]][[1]]$A),
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "A(t) in alcoholic beverages", ylim = c(0, 100*q),
              main = "Frequency of addictive acts A(t) over time")
-        }
+        } else if (A.plot == TRUE & successfull == FALSE) {
+                plot(list.output[[ trials.fail[1] ]][[1]]$t, 100*(list.output[[ trials.fail[1] ]][[1]]$A),
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "A(t) in alcoholic beverages", ylim = c(0, 100*q),
+                     main = "Frequency of addictive acts A(t) over time")
+        } 
         
         # self-control
-        if (S.plot == TRUE) {
-        plot(list.output[[1]][[1]]$t, list.output[[1]][[1]]$S,
+        if (S.plot == TRUE & successfull == TRUE) {
+        plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$S,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "S(t)", ylim = c(0,S.plus),
              main = "Self-control over time")
+        } else if (S.plot == TRUE & successfull == FALSE) {
+                plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$S,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "S(t)", ylim = c(0,S.plus),
+                     main = "Self-control over time")
         }
         
         # craving
-        if (C.plot == TRUE) {
-        plot(list.output[[1]][[1]]$t, list.output[[1]][[1]]$C,
+        if (C.plot == TRUE & successfull == TRUE) {
+        plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$C,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "C(t)",
              main = "Craving C(t) over time")
+        } else if (C.plot == TRUE & successfull == FALSE) {
+                plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$C,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "C(t)",
+                     main = "Craving C(t) over time")
         }
         
         # vulnerability
-        if (V.plot == TRUE) {
-        plot(list.output[[1]][[1]]$t, list.output[[1]][[1]]$V,
+        if (V.plot == TRUE & successfull == TRUE) {
+        plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$V,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "V(t)", ylim = c(0,1),
              main = "Vulnerability V(t) over time")
+        } else if (V.plot == TRUE & successfull == FALSE) {
+                plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$V,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "V(t)", ylim = c(0,1),
+                     main = "Vulnerability V(t) over time")
         }
         
         # DOUBLE PLOTS
         # S and V
-        if (SV.plot == TRUE) {
-                plot(list.output[[1]][[1]]$t, list.output[[1]][[1]]$V,
+        if (SV.plot == TRUE & successfull == TRUE) {
+                plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$V,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "V(t) and S(t)",
                      main = "Vulnerability V(t) and Self-Control S(t) over time")
-                lines(list.output[[1]][[1]]$t, list.output[[1]][[1]]$S, lty = 2, lwd = 2)
+                lines(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$S,
+                      lty = 2, lwd = 2)
+                legend("bottomright", legend = c("S(t)", "V(t"), lty = c(2, 1), lwd = 2)
+        } else if (SV.plot == TRUE & successfull == FALSE) {
+                plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$V,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "V(t) and S(t)",
+                     main = "Vulnerability V(t) and Self-Control S(t) over time")
+                lines(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$S,
+                      lty = 2, lwd = 2)
                 legend("bottomright", legend = c("S(t)", "V(t"), lty = c(2, 1), lwd = 2)
         }
         
         # A and C
-        if (AC.plot == TRUE) {
-                plot(list.output[[1]][[1]]$t, list.output[[1]][[1]]$A,
+        if (AC.plot == TRUE & successfull == TRUE) {
+                plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$A,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "A(t) and C(t)",
                      main = "Addictive acts A(t) and craving C(t) over time")
-                lines(list.output[[1]][[1]]$t, list.output[[1]][[1]]$C, lty = 2, lwd = 2)
+                lines(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$C,
+                      lty = 2, lwd = 2)
                 legend("bottomright", legend = c("C(t)", "A(t"), lty = c(2, 1), lwd = 2)
+        } else if (AC.plot == TRUE & successfull == FALSE) {
+                plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$A,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "A(t) and C(t)",
+                     main = "Addictive acts A(t) and craving C(t) over time")
+                lines(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$C,
+                      lty = 2, lwd = 2)
         }
 }
 
@@ -255,7 +299,7 @@ for (i in 1:no.simulations) {
 CalculateSuccess()
 
 
-MakeGraphs(S.plot = TRUE)
+MakeGraphs(AC.plot = TRUE)
 
 
 ###############################################################################
