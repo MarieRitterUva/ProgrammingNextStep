@@ -93,6 +93,8 @@ InitializeVectors <-
         
         A <<- numeric(length = weeks+1)
         A[1] <<- A.init
+        
+        addiction <<- logical(weeks+1)
 }
 
 
@@ -127,9 +129,9 @@ SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b
         }
         
         if (V[weeks+1] == 1) {
-                addiction <- TRUE
+                addiction[weeks+1] <- TRUE
         } else {
-                addiction <- FALSE
+                addiction[weeks+1] <- FALSE
         }
         
         cues <<- cues
@@ -158,11 +160,18 @@ BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V, addictio
         }
 }
 
-BuildOutputList <- function () {
-        output.success <- list(df.output, addiction)  # includes success data
+BuildOutputList <- function (loop) {
+        output.success <- list(df.output, addiction[loop])  # includes success data
         output.addition <- c(list.output, list(output.success))  # adds the new data to the list
         list.output <<- output.addition
 }
+
+CalculateSuccess <- function () {
+        success.percent <- (max(0, (sum(addiction == FALSE) - 1)) / weeks) * 100
+        
+        success.percent <<- success.percent
+}
+
 
 # GRAPHS
 
@@ -243,9 +252,10 @@ for (i in 1:no.simulations) {
         BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V, print = FALSE)
         
         # save output in list
-        BuildOutputList()
+        BuildOutputList(i)
 }
 
+CalculateSuccess()
 
 
 MakeGraphs(S.plot = TRUE)
