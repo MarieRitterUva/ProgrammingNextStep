@@ -17,6 +17,8 @@ NOTE: There needs to be an error when a person wants to see successful/fail grap
 
 NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted data can be downloaded and code to make graphs can be downloaded
 
+- For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
+
 
 ---------------------------------------------------------
 - Parameter boundaries? d between 0 and 1 (make note in GUI that most realistic lies around .2)

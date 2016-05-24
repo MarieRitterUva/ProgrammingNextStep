@@ -280,46 +280,77 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
 
 # Bifurcation diagrams
 
-MakeBifurcationDiagram <- function () {
-        x <- 1
-}
-
-bifurc.para <- "E"
-Y <- "C"
-min <- -1
-max <- 1
-sequence <- seq(min, max, 0.1)  # E for now
-# burn 50 weeks, simulate 250
-# empty plot
-plot(c(min, max), c(0, 1), type = "n", pch = ".", xlab = bifurc.para, ylab = Y,
-     bty = "n", las = 1)
-
-for (E.bifur in sequence) {
+MakeBifurcationDiagram <- function (bifurc = "E", Y = "C") {
         
-        CalculateParameters(d, S.plus, q)
-        
-        InitializeVectors(C.init, S.plus, E.bifur, lamda.init, A.init, weeks)
-        
-        InitializeList()
-        
-        for (i in 1:250) {
-                SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plus, h, k, q)
+        if (bifurc == "E" & Y == "C") {
                 
-                # get output
-                BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V)
+                min <- -1
+                max <- 1
+                bifur.sequence <- seq(min, max, 0.05)  # sequence for E's
                 
-                # save output in list
-                BuildOutputList(i)
+                # create empty plot
+                plot(c(min, max), c(0, 1), type = "n", pch = ".", xlab = bifurc, ylab = Y,
+                     bty = "n", las = 1)
+                
+                for (i in bifur.sequence) {
+                        weeks.bifur <- 500  # simulate 500, burn 250
+                        
+                        CalculateParameters(d, S.plus, q)
+                        
+                        InitializeVectors(C.init, S.plus, i, lamda.init, A.init, weeks.bifur)
+                        
+                        InitializeList()
+                        
+                        SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks.bifur,
+                                                    b, d, p, S.plus, h, k, q)
+                        
+                        BuildOutputDataframe(weeks.bifur, A, Crav, S, E, lamda, cues, V)
+                        
+                        BuildOutputList()
+                        
+                        for (j in 250:weeks.bifur) {  # simulate 500, burn 250
+                                points(i, list.output[[1]][[1]]$C[j])
+                        }
+                        
+                }
+        } else if (bifurc = "E" & Y = "S") {
+                min <- -1
+                max <- 1
+                bifur.sequence <- seq(min, max, 0.05)  # sequence for E's
+                
+                # create empty plot
+                plot(c(min, max), c(0, 1), type = "n", pch = ".", xlab = bifurc, ylab = Y,
+                     bty = "n", las = 1)
+                
+                for (i in bifur.sequence) {
+                        weeks.bifur <- 500  # simulate 500, burn 250
+                        
+                        CalculateParameters(d, S.plus, q)
+                        
+                        InitializeVectors(C.init, S.plus, i, lamda.init, A.init, weeks.bifur)
+                        
+                        InitializeList()
+                        
+                        SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks.bifur,
+                                                    b, d, p, S.plus, h, k, q)
+                        
+                        BuildOutputDataframe(weeks.bifur, A, Crav, S, E, lamda, cues, V)
+                        
+                        BuildOutputList()
+                        
+                        for (j in 250:weeks.bifur) {  # simulate 500, burn 250
+                                points(i, list.output[[1]][[1]]$S[j])
+                        }
+                        
+                }
+                
         }
         
-        for (i in 100:250) {
-        points(rep(E.bifur, length(list.output[[i]][[1]]$C)), list.output[[i]][[1]]$C)
-        }
-        
 }
 
 
 
+dev.off()
 ###############################################################################
 # initializing
 
@@ -347,5 +378,6 @@ CalculateSuccess()
 
 MakeGraphs(V.plot = TRUE, successfull = FALSE)
 
+MakeBifurcationDiagram()
 
 ###############################################################################
