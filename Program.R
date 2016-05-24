@@ -151,13 +151,10 @@ InitializeList <- function () {
 
 # build output dataframe
 
-BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V, addiction, print = TRUE) {
+BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V, addiction) {
         output <- data.frame("t" = (1: (weeks+1))-1,  "A" = A, "C" = Crav, "S" = S,
                              "E" = E, "lamda" = lamda, "cues" = cues, "V" = V)
         df.output <<- output
-        if (print == TRUE) {
-                return(output)
-        }
 }
 
 BuildOutputList <- function (loop) {
@@ -249,7 +246,7 @@ for (i in 1:no.simulations) {
         SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plus, h, k, q)
         
         # get output
-        BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V, print = FALSE)
+        BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V)
         
         # save output in list
         BuildOutputList(i)
