@@ -3,7 +3,7 @@ library(shiny)
 # ui.R
 # GUI for the whole program
 
-shinyUI(navbarPage("Navigation",
+shinyUI(navbarPage("",
                    
                    tabPanel("Instructions",
                             h2("Welcome to SADE!"),
@@ -19,16 +19,21 @@ shinyUI(navbarPage("Navigation",
                             
                             sidebarLayout(
                                     sidebarPanel(
-                                            h4("Parameters"),
-                                            helpText("Please insert your parameters here."),
-                                            br(),
                                             numericInput("q", label = "q", value = 0.8),
                                             sliderInput("E.init", label = "initial E", value = 0,
                                                         min = -1, max = 1, step = 0.05),
                                             sliderInput("S.plus", label = "S max", value = 0.5,
                                                         min = 0, max = 1, step = 0.05),
                                             sliderInput("d", label = "d", value = 0.2,
-                                                        min = 0, max = 1, step = 0.05)
+                                                        min = 0, max = 1, step = 0.05),
+                                            sliderInput("C.init", label = "initial C", value = 0,
+                                                        min = 0, max = 1, step = 0.05),
+                                            sliderInput("A.init", label = "initial addictive acts", value = 0.4,
+                                                        min = 0, max = 0.8, step = 0.05),
+                                            numericInput("lamda.init", label = "inital lamda", value = 0.5),
+                                            numericInput("weeks", label = "No. of weeks", value = 25),
+                                            numericInput("no.simulations", label = "No. of simulations",
+                                                         value = 100)
                                             
                                     ),
                                     
@@ -55,7 +60,21 @@ shinyUI(navbarPage("Navigation",
                             h4("d"),
                             p("A paramter indicating how quickly craving decays. If craving never gets smaller,
                                d would be 0. If craving is instantly gone, d would be 1. A realistic value for
-                               alcohol addiction is 0.2 .")
+                               alcohol addiction is 0.2 ."),
+                            br(),
+                            h4("initial C"),
+                            p("The craving for the addictive substance a patient has at the beginning of the simulation."),
+                            br(),
+                            h4("initial A"),
+                            p("How often the person uses the addictive substance at the beginning of the simulation."),
+                            br(),
+                            h4("initial lamda"),
+                            p("Represents the intensity of external influences, i.e. how much random external influences
+                              influence the patient."),
+                            br(),
+                            h4("No. of weeks and simulations"),
+                            p("For how many weeks should the simulation be run? How often should the simulation be repeated?
+                               Note that very large numbers can cause lomg waiting times and possibly program crashes.")
                    ),
                    
                    navbarMenu("More",
