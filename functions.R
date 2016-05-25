@@ -1,55 +1,6 @@
-## Programming: The next step - Simulating Addiction with Difference Equations
-## Marie Ritter - UvA
+# Functions four sourcing
 
-# ToDo: Bifurcation diagrams
-
-# ToDo: Treatment - new display logic
-  # Treatment Weeks (if statements)
-  # Success output
-
-# ToDo: Write input ifs, error handling, error messages
-# ToDo: Have all functions in separate file to source them in Shiny
-# ToDO: Simple GUI input and output
-# ToDo: Display Logic GUI
-# ToDo: Speed of Simulation
-# ToDo: Beautify GUI
-# ToDo: Saving graphs and output
-# ToDo: Manual and Instructions
-# ToDo: Make code citable, check comments, etc.
-# ToDo: Update Git-Readme
-# ToDo: Host on Server (?) ask Raoul
-
-#############################################################################
-
-rm(list = ls())
-setwd("/home/marie/Dokumente/Uni/Courses/Programming/Repo/ProgrammingNextStep")
-
-#############################################################################
-
-# input -> later from GUI
-
-q <- 0.8  # maximum consumption
-
-E.init <- 1  # external influences (-1, 1)
-
-S.plus <- 0.5  # maximum self-control (0, 1)
-
-d <- 0.2  # decay of craving (0,1)
-
-C.init <- 0  # craving at time 0
-
-A.init <- 0.5 * q  # consumption at time 0 (0, 1), actually factor is parameter, add calculate function later
-
-weeks <- 100  # number of weeks
-
-lamda.init <- 0.5  # intensity of external influences
-
-no.simulations <- 100  # how many times simulation should be run
-
-#############################################################################
-# Functions
-
-# calculate parameters
+# Calculate parameters
 # - needs to be done in beginning and if input parameters change
 
 CalculateParameters <- function (d = 0.2, S.plus = 0.5, q = 0.8) {
@@ -60,44 +11,44 @@ CalculateParameters <- function (d = 0.2, S.plus = 0.5, q = 0.8) {
 }
 
 
-# initialize vectors
+# Initialize vectors
 # - needs to be done in beginning and if input parameters change
 
 InitializeVectors <- 
         function (C.init = 0, S.plus = 0.5, E.init = 0, lamda.init = 0.5, A.init = 0.4,
                   weeks = 20, no.simulations = 100) {
-        
-        Crav <<- numeric(length = weeks+1)
-        Crav[1] <- C.init
-        
-        S <<- numeric(length = weeks+1)
-        S[1] <<- S.plus
-        
-        E <<-  numeric(length = weeks+1)
-        E[1] <<- E.init
-        for (i in 1:weeks) {
-                E[i+1] <<- round((E[i] - d * E[1]), 2)
+                
+                Crav <<- numeric(length = weeks+1)
+                Crav[1] <- C.init
+                
+                S <<- numeric(length = weeks+1)
+                S[1] <<- S.plus
+                
+                E <<-  numeric(length = weeks+1)
+                E[1] <<- E.init
+                for (i in 1:weeks) {
+                        E[i+1] <<- round((E[i] - d * E[1]), 2)
+                }
+                
+                lamda <<- numeric(length = weeks+1)
+                lamda[1] <<- lamda.init
+                for (i in 1:weeks) {
+                        lamda[i+1] <<- lamda[i] + d * lamda[1]
+                }
+                
+                cues <<- numeric(length = weeks+1)
+                
+                V <<- numeric(length = weeks+1)
+                V[1] <<- min(c(1, max(c(0, (S.plus - Crav[1] - E[1]) )) ))
+                
+                A <<- numeric(length = weeks+1)
+                A[1] <<- A.init
+                
+                addiction.end <<- logical(no.simulations)
         }
-        
-        lamda <<- numeric(length = weeks+1)
-        lamda[1] <<- lamda.init
-        for (i in 1:weeks) {
-                lamda[i+1] <<- lamda[i] + d * lamda[1]
-        }
-        
-        cues <<- numeric(length = weeks+1)
-        
-        V <<- numeric(length = weeks+1)
-        V[1] <<- min(c(1, max(c(0, (S.plus - Crav[1] - E[1]) )) ))
-        
-        A <<- numeric(length = weeks+1)
-        A[1] <<- A.init
-        
-        addiction.end <<- logical(no.simulations)
-}
 
 
-# Simulate C, S, V, and A
+# Simulate C, S, V, and A - core process
 
 SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plus, h, k, q) {
         
@@ -142,35 +93,37 @@ SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b
         
 }
 
-# Initialize list for datastorage
 
+# Initialize list for datastorage
 InitializeList <- function () {
         list.output <<- list()
 }
 
-# build output dataframe
-
+# Build output dataframe
 BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V) {
         output <- data.frame("t" = (1: (weeks+1))-1,  "A" = A, "C" = Crav, "S" = S,
                              "E" = E, "lamda" = lamda, "cues" = cues, "V" = V)
         df.output <<- output
 }
 
+# Build the list for final storage
 BuildOutputList <- function () {
         output.success <- list(df.output, addiction)  # includes success data
         output.addition <- c(list.output, list(output.success))  # adds the new data to the list
         list.output <<- output.addition
 }
 
+# Create a vector to be used in success calculations
 BuildVectorOutcome <- function (loop) {
         addiction.end[loop] <- addiction
         addiction.end <<- addiction.end
 }
 
+# Calculate how often of the simulations patient is addicted after the time and get percentage
 CalculateSuccess <- function () {
         success.percent <- (max(0, (sum(addiction.end == FALSE) - 1)) / weeks) * 100
         trials.success <- ((which(addiction.end == FALSE))[-1] - 1)  # discard first number for week 0
-                                                                 # substract one to get actual week number
+        # substract one to get actual week number
         trials.fail <- ((which(addiction.end == TRUE))[-1] - 1)
         
         success.percent <<- success.percent
@@ -180,19 +133,22 @@ CalculateSuccess <- function () {
 }
 
 
+###############################################################################
+
 # GRAPHS
 
 # Graphs over time
+# uses the output list to get data; x is always time t
 MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
                         V.plot = FALSE, SV.plot = FALSE, AC.plot = FALSE,
                         successfull = TRUE) {
         # SINGLE PLOTS
         # addictive acts
         if (A.plot == TRUE & successfull == TRUE) {
-        plot(list.output[[ trials.success[1] ]][[1]]$t, 100*(list.output[[ trials.success[1] ]][[1]]$A),
-             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = "A(t) in alcoholic beverages", ylim = c(0, 100*q),
-             main = "Frequency of addictive acts A(t) over time")
+                plot(list.output[[ trials.success[1] ]][[1]]$t, 100*(list.output[[ trials.success[1] ]][[1]]$A),
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "A(t) in alcoholic beverages", ylim = c(0, 100*q),
+                     main = "Frequency of addictive acts A(t) over time")
         } else if (A.plot == TRUE & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, 100*(list.output[[ trials.fail[1] ]][[1]]$A),
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
@@ -202,10 +158,10 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         
         # self-control
         if (S.plot == TRUE & successfull == TRUE) {
-        plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$S,
-             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = "S(t)", ylim = c(0,S.plus),
-             main = "Self-control over time")
+                plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$S,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "S(t)", ylim = c(0,S.plus),
+                     main = "Self-control over time")
         } else if (S.plot == TRUE & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$S,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
@@ -215,10 +171,10 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         
         # craving
         if (C.plot == TRUE & successfull == TRUE) {
-        plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$C,
-             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = "C(t)",
-             main = "Craving C(t) over time")
+                plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$C,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "C(t)",
+                     main = "Craving C(t) over time")
         } else if (C.plot == TRUE & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$C,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
@@ -228,10 +184,10 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         
         # vulnerability
         if (V.plot == TRUE & successfull == TRUE) {
-        plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$V,
-             bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = "V(t)", ylim = c(0,1),
-             main = "Vulnerability V(t) over time")
+                plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$V,
+                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+                     type = "l", ylab = "V(t)", ylim = c(0,1),
+                     main = "Vulnerability V(t) over time")
         } else if (V.plot == TRUE & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$V,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
@@ -277,6 +233,8 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
                       lty = 2, lwd = 2)
         }
 }
+
+
 
 # Bifurcation diagrams
 
@@ -347,38 +305,3 @@ MakeBifurcationDiagram <- function (bifurc = "E", Y = "C") {
                 }
         }
 }
-
-
-
-
-dev.off()
-###############################################################################
-# initializing
-
-CalculateParameters(d, S.plus, q)
-
-InitializeVectors(C.init, S.plus, E.init, lamda.init, A.init, weeks, no.simulations)
-
-InitializeList()
-
-# actual simulation
-for (i in 1:no.simulations) {
-        SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plus, h, k, q)
-        
-        # get output
-        BuildOutputDataframe(weeks, A, Crav, S, E, lamda, cues, V)
-        
-        # save output in list
-        BuildOutputList()
-        
-        BuildVectorOutcome(i)
-}
-
-CalculateSuccess()
-
-
-MakeGraphs(V.plot = TRUE, successfull = FALSE)
-
-MakeBifurcationDiagram()
-
-###############################################################################
