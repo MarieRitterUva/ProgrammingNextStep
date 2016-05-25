@@ -4,10 +4,12 @@
 # - needs to be done in beginning and if input parameters change
 
 CalculateParameters <- function (d, S.plus, q) {
-        p <<- 2*d  # resilience parameter
-        k <<- (p * S.plus) / q
-        h <<- p * S.plus
-        b <<- (2*d) / q
+        p <- 2*d  # resilience parameter
+        k <- (p * S.plus) / q
+        h <- p * S.plus
+        b <- (2*d) / q
+        
+        return(c(p, k, h, b))
 }
 
 
@@ -15,41 +17,43 @@ CalculateParameters <- function (d, S.plus, q) {
 # - needs to be done in beginning and if input parameters change
 
 InitializeVectors <- 
-        function (C.init, S.plus, E.init, lamda.init, A.init, weeks, no.simulations) {
+        function (C.init, S.plus, E.init, lamda.init, A.init, weeks, no.simulations, d) {
                 
-                Crav <<- numeric(length = weeks+1)
+                Crav <- numeric(length = weeks+1)
                 Crav[1] <- C.init
                 
-                S <<- numeric(length = weeks+1)
-                S[1] <<- S.plus
+                S <- numeric(length = weeks+1)
+                S[1] <- S.plus
                 
-                E <<-  numeric(length = weeks+1)
-                E[1] <<- E.init
+                E <-  numeric(length = weeks+1)
+                E[1] <- E.init
                 for (i in 1:weeks) {
-                        E[i+1] <<- round((E[i] - d * E[1]), 2)
+                        E[i+1] <- round((E[i] - d * E[1]), 2)
                 }
                 
-                lamda <<- numeric(length = weeks+1)
-                lamda[1] <<- lamda.init
+                lamda <- numeric(length = weeks+1)
+                lamda[1] <- lamda.init
                 for (i in 1:weeks) {
-                        lamda[i+1] <<- lamda[i] + d * lamda[1]
+                        lamda[i+1] <- lamda[i] + d * lamda[1]
                 }
                 
-                cues <<- numeric(length = weeks+1)
+                cues <- numeric(length = weeks+1)
                 
-                V <<- numeric(length = weeks+1)
-                V[1] <<- min(c(1, max(c(0, (S.plus - Crav[1] - E[1]) )) ))
+                V <- numeric(length = weeks+1)
+                V[1] <- min(c(1, max(c(0, (S.plus - Crav[1] - E[1]) )) ))
                 
-                A <<- numeric(length = weeks+1)
-                A[1] <<- A.init
+                A <- numeric(length = weeks+1)
+                A[1] <- A.init
                 
-                addiction.end <<- logical(no.simulations)
+                addiction.end <- logical(no.simulations)
+                
+                return(list(Crav = Crav, S = S, E = E, lamda = lamda, cues = cues, V = V, A = A, addiction.end = addiction.end))
         }
 
 
 # Simulate C, S, V, and A - core process
 
-SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b, d, p, S.plus, h, k, q) {
+SimulateAddictionComponents <- function (Crav, S, E, lamda, cues, V, A, p, k, h, b, d, S.plus, q, weeks) {
         
         for (i in 1:weeks) {
                 # calculate C(t+1)
@@ -83,51 +87,45 @@ SimulateAddictionComponents <- function (Crav, S, V, A, E, lamda, cues, weeks, b
                 addiction <- TRUE
         }
         
-        cues <<- cues
-        A <<- A
-        Crav <<- Crav
-        S <<- S
-        V <<- V
-        addiction <<- addiction
+        return(list(cues = cues, A = A, Crav = Crav, S = S, V = V, addiction = addiction))
         
 }
 
 
 # Initialize list for datastorage
 InitializeList <- function () {
-        list.output <<- list()
+        list.output <- list()
+        return(list.output)
 }
 
 # Build output dataframe
-BuildOutputDataframe <- function (weeks, A, Crav, S, E, lamda, cues, V) {
+BuildOutputDataframe <- function (weeks, cues, A, Crav, S, V, E, lamda) {
         output <- data.frame("t" = (1: (weeks+1))-1,  "A" = A, "C" = Crav, "S" = S,
                              "E" = E, "lamda" = lamda, "cues" = cues, "V" = V)
-        df.output <<- output
+        return(output)
 }
 
 # Build the list for final storage
-BuildOutputList <- function () {
+BuildOutputList <- function (df.output, addiction, list.output) {
         output.success <- list(df.output, addiction)  # includes success data
         output.addition <- c(list.output, list(output.success))  # adds the new data to the list
-        list.output <<- output.addition
+        return(output.addition)
 }
 
 # Create a vector to be used in success calculations
 BuildVectorOutcome <- function (loop) {
         addiction.end[loop] <- addiction
-        addiction.end <<- addiction.end
+        return(addiction.end)
 }
 
 # Calculate how often of the simulations patient is addicted after the time and get percentage
-CalculateSuccess <- function () {
+CalculateSuccess <- function (addiction.end, weeks) {
         success.percent <- (max(0, (sum(addiction.end == FALSE) - 1)) / weeks) * 100
         trials.success <- ((which(addiction.end == FALSE))[-1] - 1)  # discard first number for week 0
         # substract one to get actual week number
         trials.fail <- ((which(addiction.end == TRUE))[-1] - 1)
         
-        success.percent <<- success.percent
-        trials.success <<- trials.success
-        trials.fail <<- trials.fail
+        return(list(success.percent = success.percent, trials.success = trials.success, trials.fail = trials.fail))
         
 }
 
@@ -138,7 +136,7 @@ CalculateSuccess <- function () {
 
 # Graphs over time
 # uses the output list to get data; x is always time t
-MakeGraphs <- function (graph.type, successfull) {
+MakeGraphs <- function (graph.type, successfull, list.output) {
         # SINGLE PLOTS
         # addictive acts
         if (graph.type == 1 & successfull == TRUE) {

@@ -11,6 +11,8 @@ shinyUI(navbarPage("",
                             
                             h4("Please visit the Instructions tab to learn about how to use this program!"),
                             
+                            textOutput("test"),
+                            
                             sidebarLayout(
                                     sidebarPanel(
                                             numericInput("q", label = "q", value = 0.8),
@@ -46,11 +48,11 @@ shinyUI(navbarPage("",
                                                                   value = TRUE),
                                                     helpText("Display a simulation where a participant is NOT addicted at the end.")
                                                             
-                                                    ),
+                                                    )#,
                                             
-                                            plotOutput("time.plot"),
+                                           # plotOutput("time.plot"),
                                             
-                                            textOutput("success.rate")
+                                           # textOutput("success.rate")
                                             )
                                     )
                             ),
