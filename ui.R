@@ -5,17 +5,11 @@ library(shiny)
 
 shinyUI(navbarPage("",
                    
-                   tabPanel("Instructions",
-                            h2("Welcome to SADE!"),
-                            h4("What is SADE?"),
-                            h4("How do I use SADE?"),
-                            h4("What options can I select?"),
-                            h4("Where can I get the app?")
-                   ),
-                   
-                   
                    tabPanel("Basic Simulation",
+                            
                             titlePanel("Basic Simulation"),
+                            
+                            h4("Please visit the Instructions tab to learn about how to use this program!"),
                             
                             sidebarLayout(
                                     sidebarPanel(
@@ -31,34 +25,35 @@ shinyUI(navbarPage("",
                                             sliderInput("A.init", label = "initial addictive acts", value = 0.4,
                                                         min = 0, max = 0.8, step = 0.05),
                                             numericInput("lamda.init", label = "inital lamda", value = 0.5),
-                                            numericInput("weeks", label = "No. of weeks", value = 25),
+                                            numericInput("weeks", label = "No. of weeks", value = 25,
+                                                         step = 1, min = 1, max = 1000),
                                             numericInput("no.simulations", label = "No. of simulations",
-                                                         value = 100)
+                                                         value = 100, step = 1, min = 0, max = 3000)
                                             
                                     ),
                                     
                                     mainPanel(
                                             wellPanel(
                                                     h4("Output Options"),
-                                                    fluidRow(
-                                                            column(5,
-                                                                   checkboxInput("display.success", label = "Display success output"),
-                                                                   selectInput("graph.type", label = "Graph Type",
-                                                                               choices = list("A over time" = 1, "C over time" = 2,
-                                                                                              "S over time" = 3, "V over time" = 4,
-                                                                                              "A & C over time" = 5, "S & V over time" = 6))
-                                                            ),
+                                                    checkboxInput("display.success", label = "Display success output"),
+                                                    helpText("Out of all simulation runs, how often is patient addicted at the end."),
+                                                    br(),
+                                                    selectInput("graph.type", label = "Graph Type",
+                                                                choices = list("A over time" = 1, "C over time" = 2,
+                                                                               "S over time" = 3, "V over time" = 4,
+                                                                               "A & C over time" = 5, "S & V over time" = 6)),
+                                                    checkboxInput("graph.success", label = "Display successful run",
+                                                                  value = TRUE),
+                                                    helpText("Display a simulation where a participant is NOT addicted at the end.")
                                                             
-                                                            column(7,
-                                                                   helpText("Out of all simulation runs, how often is patient addicted at the end."),
-                                                                   helpText("Development of the addiction parameters over time")
-                                                            )
-                                                    )       
+                                                    ),
+                                            
+                                            plotOutput("time.plot"),
+                                            
+                                            textOutput("success.rate")
                                             )
                                     )
-                            )
-                            
-                   ),
+                            ),
                    
                    tabPanel("Parameters Explained",
                             h4("A"),
@@ -107,6 +102,14 @@ shinyUI(navbarPage("",
                             br()
                    ),
                    
+                   tabPanel("Instructions",
+                            h2("Welcome to SADE!"),
+                            h4("What is SADE?"),
+                            h4("How do I use SADE?"),
+                            h4("What options can I select?"),
+                            h4("Where can I get the app?")
+                   ),
+                   
                    navbarMenu("More",
                               tabPanel("Bifurcation Diagram",
                                        "Make Bifurcs here."
@@ -123,5 +126,4 @@ shinyUI(navbarPage("",
                    )
                    
 )
-
 )

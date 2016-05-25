@@ -8,7 +8,6 @@
   # Success output
 
 # ToDo: Write input ifs, error handling, error messages
-# ToDo: Have all functions in separate file to source them in Shiny
 # ToDO: Simple GUI input and output
 # ToDo: Display Logic GUI
 # ToDo: Speed of Simulation
@@ -183,17 +182,16 @@ CalculateSuccess <- function () {
 # GRAPHS
 
 # Graphs over time
-MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
-                        V.plot = FALSE, SV.plot = FALSE, AC.plot = FALSE,
+MakeGraphs <- function (graph.type,
                         successfull = TRUE) {
         # SINGLE PLOTS
         # addictive acts
-        if (A.plot == TRUE & successfull == TRUE) {
+        if (graph.type == 1 & successfull == TRUE) {
         plot(list.output[[ trials.success[1] ]][[1]]$t, 100*(list.output[[ trials.success[1] ]][[1]]$A),
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "A(t) in alcoholic beverages", ylim = c(0, 100*q),
              main = "Frequency of addictive acts A(t) over time")
-        } else if (A.plot == TRUE & successfull == FALSE) {
+        } else if (graph.type == 1 & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, 100*(list.output[[ trials.fail[1] ]][[1]]$A),
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "A(t) in alcoholic beverages", ylim = c(0, 100*q),
@@ -201,12 +199,12 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         } 
         
         # self-control
-        if (S.plot == TRUE & successfull == TRUE) {
+        if (graph.type == 3 & successfull == TRUE) {
         plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$S,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "S(t)", ylim = c(0,S.plus),
              main = "Self-control over time")
-        } else if (S.plot == TRUE & successfull == FALSE) {
+        } else if (graph.type == 3 & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$S,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "S(t)", ylim = c(0,S.plus),
@@ -214,12 +212,12 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         }
         
         # craving
-        if (C.plot == TRUE & successfull == TRUE) {
+        if (graph.type == 2 & successfull == TRUE) {
         plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$C,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "C(t)",
              main = "Craving C(t) over time")
-        } else if (C.plot == TRUE & successfull == FALSE) {
+        } else if (graph.type == 2 & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$C,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "C(t)",
@@ -227,12 +225,12 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         }
         
         # vulnerability
-        if (V.plot == TRUE & successfull == TRUE) {
+        if (graph.type == 4 & successfull == TRUE) {
         plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$V,
              bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
              type = "l", ylab = "V(t)", ylim = c(0,1),
              main = "Vulnerability V(t) over time")
-        } else if (V.plot == TRUE & successfull == FALSE) {
+        } else if (graph.type == 4 & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$V,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "V(t)", ylim = c(0,1),
@@ -241,7 +239,7 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         
         # DOUBLE PLOTS
         # S and V
-        if (SV.plot == TRUE & successfull == TRUE) {
+        if (graph.type == 6 & successfull == TRUE) {
                 plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$V,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "V(t) and S(t)",
@@ -249,7 +247,7 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
                 lines(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$S,
                       lty = 2, lwd = 2)
                 legend("bottomright", legend = c("S(t)", "V(t"), lty = c(2, 1), lwd = 2)
-        } else if (SV.plot == TRUE & successfull == FALSE) {
+        } else if (graph.type == 6 & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$V,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "V(t) and S(t)",
@@ -260,7 +258,7 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
         }
         
         # A and C
-        if (AC.plot == TRUE & successfull == TRUE) {
+        if (graph.type == 5 & successfull == TRUE) {
                 plot(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$A,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "A(t) and C(t)",
@@ -268,7 +266,7 @@ MakeGraphs <- function (A.plot = FALSE, S.plot = FALSE, C.plot = FALSE,
                 lines(list.output[[ trials.success[1] ]][[1]]$t, list.output[[ trials.success[1] ]][[1]]$C,
                       lty = 2, lwd = 2)
                 legend("bottomright", legend = c("C(t)", "A(t"), lty = c(2, 1), lwd = 2)
-        } else if (AC.plot == TRUE & successfull == FALSE) {
+        } else if (graph.type == 5 & successfull == FALSE) {
                 plot(list.output[[ trials.fail[1] ]][[1]]$t, list.output[[ trials.fail[1] ]][[1]]$A,
                      bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
                      type = "l", ylab = "A(t) and C(t)",
