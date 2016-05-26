@@ -5,9 +5,9 @@
 # returns vector with calculated parameters
 CalculateParameters <- function (d, S.plus, q) {
         p <- 2*d  # resilience parameter
-        k <- (p * S.plus) / q
-        h <- p * S.plus
-        b <- (2*d) / q
+        k <- (p * S.plus)/q
+        h <- p*S.plus
+        b <- (2*d)/q
         
         return(c(p, k, h, b))
 }
@@ -79,13 +79,13 @@ SimulateAddictionComponents <- function (vectors, parameters, S.plus, q, weeks, 
         
         for (i in 1:weeks) {
                 # calculate C(t+1)
-                Crav[i+1] <- Crav[i] + b * min(c(1, 1-Crav[i])) * A[i] - d * Crav[i]
+                Crav[i+1] <- ( Crav[i] + b * min(c(1, (1-Crav[i]))) * A[i] - d * Crav[i] )
                 
                 # calculate S(t+1)
-                S[i+1] <- S[i] + p * max(c(0, (S.plus - S[i])) ) - h * Crav[i] - k * A[i]
+                S[i+1] <- ( S[i] + p * max(c(0, (S.plus - S[i]))) - h * Crav[i] - k * A[i] )
                 
                 # calculate V(t+1)
-                V[i+1] <- min(c(1, max(c(0, Crav[i] - S[i] - E[i]))))
+                V[i+1] <- min(c(1, max(c(0, (Crav[i] - S[i] - E[i])))))
                 
                 # calculate A(t+1)
                 # generate random component (cues)
@@ -204,6 +204,7 @@ MakeGraphs <- function (graph.type, graph.success, output.addiction, success.lis
         
         
         x <- output.addiction[[ a ]][[1]]$t  # time is always on x-axis
+        x.lim <- c(0, length(x))
         y <- numeric()
         y1 <- numeric()
         y.lim <- numeric()
@@ -216,41 +217,41 @@ MakeGraphs <- function (graph.type, graph.success, output.addiction, success.lis
                 y <- 100*(output.addiction[[a]][[1]]$A)
                 ytitle <- "A(t) in alcoholic beverages"
                 g.title <- "Addictive acts A(t) per week over time"
-                y.lim <- c(0, 100*q)
+                y.lim <- c(-0.05, 100*q)
         } else if (graph.type == 2) {
                 y <- output.addiction[[a]][[1]]$C
                 ytitle <- "C(t)"
                 g.title <- "Craving over time"
-                y.lim <- c(0, max(y))
+                y.lim <- c(-0.05, 1.05)
         } else if (graph.type == 3) {
                 y <- output.addiction[[a]][[1]]$S
                 ytitle <- "S(t)"
                 g.title <- "Self-control over time"
-                y.lim <- c(0, S.plus)
+                y.lim <- c(-0.05, S.plus)
         } else if (graph.type == 4) {
                 y <- output.addiction[[a]][[1]]$V
                 ytitle <- "V(t)"
                 g.title <- "Vulnerability over time"
-                y.lim <- c(0,1)
+                y.lim <- c(-0.05, 1)
         } else if (graph.type == 6) {
                 y <- output.addiction[[a]][[1]]$V
                 ytitle <- "V(t) and S(t)"
                 g.title <- "Vulnerability V(t) and Self-Control S(t) over time"
-                y.lim <- c(0,1)
+                y.lim <- c(-0.05, 1)
                 y1 <- output.addiction[[a]][[1]]$S
                 g.legend <- c("S(t)", "V(t)")
         } else if (graph.type == 5) {
                 y <- output.addiction[[a]][[1]]$A
                 ytitle <- "A(t) and C(t)"
                 g.title <- "Addictive acts A(t) and craving C(t) over time"
-                y.lim <- c(0,1)
+                y.lim <- c(-0.25, 1)
                 y1 <- output.addiction[[a]][[1]]$C
                 g.legend <- c("C(t)", "A(t)")
         }
         
         
         
-        plot(x, y, bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
+        plot(x, y, bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2, xlim = x.lim,
              type = "l", ylab = ytitle, ylim = y.lim, main = g.title, cex.lab = 1.5)
         
         if (graph.type == 5 | graph.type == 6) {
@@ -266,64 +267,115 @@ MakeGraphs <- function (graph.type, graph.success, output.addiction, success.lis
 
 # Bifurcation diagrams
 # takes list "bifurc", Y ("C" or "S"), input from GUI
-
+# renders a plot
 MakeBifurcationDiagram <- function (bifurc, Y, S.plus, q, d, C.init, E.init, lamda.init, A.init) {
         
-        min <- bifurc[[2]]
-        max <- bifurc[[3]]
-        
-        if (bifurc[[1]] == "A.init") {
-                max <- q
-        }
-        
-        bifur.sequence <- seq(min, max, 0.05)  # sequence for bifurc
+        weeks <- 300  # simulate total 500, later burn 250
+        no.simulations <- 1  # 1 time for each bifurcation parameter step
         
         # Arguments to be called in CalculateParameters
         args1 <- list(d = d, S.plus = S.plus, q = q)
         
         # argument list to be used in InitializeVectors
         args2 <- list(C.init = C.init, S.plus = S.plus, E.init = E.init,
-                     lamda.init = lamda.init, A.init = A.init, d = d)
+                      lamda.init = lamda.init, A.init = A.init, weeks = weeks,
+                      no.simulations = no.simulations, d = d)
         
-        # argument list to be used in SimulateAddictionComponents
-        args3 <- list(vectors = vectors, parameters = parameters, S.plus = S.plus, q = q, weeks = weeks, d = d)
+        # create lists to be used in plot creation
+        if (bifurc == 1) {
+                bifurc.list <- list(name = "E", min = -1, max = 1)
+        } else if (bifurc == 2) {
+                bifurc.list <- list(name = "S.plus", min = 0, max = 1)
+        } else if (bifurc == 3) {
+                bifurc.list <- list(name = "d", min = 0, max = 1)
+        } else if (bifurc == 4) {
+                bifurc.list <- list(name = "C.init", min = 0, max = 1)
+        } else if (bifurc == 5) {
+                bifurc.list <- list(name = "lamda", min = 0, max = 1)
+        } else if (bifurc == 6) {
+                bifurc.list <- list(name = "A.init", min = 0, max = 1)
+        }
         
-        if (bifurc[[1]] == "E")
         
-                
-                
+        # make sequence of bifurcation parameter
+        min <- bifurc.list[[2]]
+        max <- bifurc.list[[3]]
+        
+        if (bifurc == 6) {
+                max <- q
+        }
+        
+        bifurc.sequence <- seq(min, max, 0.05)  # sequence for bifurc
+        
+        
+        
         # set to take either C or S from dataframe
         if (Y == "C") {
                 y <- 3
-                y.lim <- c(0, 1)
+                y.lim <- c(-0.25, 1.25)
         } else if (Y == "S") {
                 y <- 4
-                y.lim <- c(0, S.plus)
+                y.lim <- c(-0.25, (S.plus+0.25))
         }
         
-        weeks <- 500  # simulate total 500, later burn 250
-        no.simulations <- 1  # 1 time for each bifurcation parameter step
         
         # create empty plot
-        plot(c(min, max), c(0, 0), type = "n", pch = ".", xlab = bifurc, ylab = Y,
-             bty = "n", las = 1, ylim = y.lim)
+        plot(c(min, max), c(0, 0), type = "n", pch = ".", xlab = bifurc.list[[1]], ylab = Y,
+             bty = "n", las = 1, ylim = y.lim, cex.lab = 1.5, main = "Bifurcation Diagram", lwd = 2)
         
         
+        # simulate the data
         for (i in bifurc.sequence) {
-                thisi <- i
                 
-                parameters <- do.call(CalculateParameters, args1)  # returns "parameters"
+                thisi <- i  # circumvents some weird ShinyR behavior
                 
-                vectors <- do.call(InitializeVectors, args2)  # returns "vectors"
-                
-                simulation <- do.call(SimulateAddictionComponents, args3)  # returns list "simulation"
-                
-                df.output <- BuildOutputDataframe(weeks, simulation, vectors)  # returns "df.outout"
-                
-                # burn first 250 of previously 500 created, plot last 250
-                for (j in 250:weeks) {  
-                        points(i, df.output[j, y])
+                if (bifurc == 1) {
+                        args2[[3]] <- thisi
+                } else if (bifurc == 2) {
+                        args1[[2]] <- thisi
+                        args2[[2]] <- thisi
+                } else if (bifurc == 3) {
+                        args1[[1]] <- thisi
+                        args2[[8]] <- thisi
+                } else if (bifurc == 4) {
+                        args2[[1]] <- thisi
+                } else if (bifurc == 5) {
+                        args2[[4]] <- thisi
+                } else if (bifurc == 6) {
+                        args2[[5]] <- thisi
                 }
+                
+                for (k in 1:50) {
+                         
+                        thisk <- k
+                        
+                        parameters <- do.call(CalculateParameters, args1)  # returns "parameters"
+                        
+                        vectors <- do.call(InitializeVectors, args2)  # returns "vectors"
+                        
+                        #necessary once at this point to create argslist with "parameters" and "vectors"
+                        # argument list to be used in SimulateAddictionComponents
+                        args3 <- list(vectors = vectors, parameters = parameters, S.plus = S.plus, q = q, weeks = weeks, d = d)
+                        
+                        if (bifurc == 2) {
+                                args3[[3]] <- thisi
+                        } else if (bifurc == 3) {
+                                args3[[6]] <- thisi
+                        }
+                        
+                        
+                        simulation <- do.call(SimulateAddictionComponents, args3)  # returns list "simulation"
+                        
+                        df.output <- BuildOutputDataframe(weeks, simulation, vectors)  # returns "df.outout"
+                        
+                        # burn first 250 of previously 500 created, plot last 250
+                        for (j in 100:weeks) {  
+                                points(i, df.output[j, y])
+                        }
+                        
+                }
+                
+                
                 
         }
 }

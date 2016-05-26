@@ -12,6 +12,9 @@ SOLVED: defaults in GUI now
 NOTE: also works for Display Logic?
 SOLVED: works
 
+NOTE: A reset button would be useful
+SOLVED: implemented
+
 ----------------------------------------------------------------------------------------------------------------------------
 
 - For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
@@ -30,7 +33,7 @@ NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could 
 
 NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
 
-NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted data can be downloaded and code to make graphs can be downloaded
+NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted, data can be downloaded and code to make graphs can be downloaded
 
 NOTE: Check Readme.md again before upload
 

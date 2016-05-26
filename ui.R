@@ -33,11 +33,13 @@ shinyUI(navbarPage("",
                                                                          min = 0, max = 1, step = 0.05),
                                                              sliderInput("A.init", label = "initial addictive acts", value = 0.4,
                                                                          min = 0, max = 0.8, step = 0.05),
-                                                             numericInput("lamda.init", label = "inital lamda", value = 0.5),
+                                                             numericInput("lamda.init", label = "inital lamda", value = 0,
+                                                                          min = 0),
                                                              numericInput("weeks", label = "No. of weeks", value = 25,
                                                                           step = 1, min = 1, max = 1000),
                                                              numericInput("no.simulations", label = "No. of simulations",
-                                                                          value = 100, step = 1, min = 0, max = 3000)
+                                                                          value = 100, step = 1, min = 0, max = 3000),
+                                                             actionButton("reset", label = "Reset parameters")
                                             )
                                     ),
                                     
@@ -93,6 +95,7 @@ shinyUI(navbarPage("",
                             h4("No. of weeks and simulations"),
                             p("For how many weeks should the simulation be run? How often should the simulation be repeated?
                                Note that very large numbers can cause lomg waiting times and possibly program crashes."),
+                            br(),
                             h4("S"),
                             p("Self-control of a person."),
                             br(),
@@ -126,31 +129,37 @@ shinyUI(navbarPage("",
                                                fluidRow(
                                                        column(5,
                                                               selectInput("bifurc", label = "Choose a bifurcation parameter:",
-                                                                          choices = list("E" = list(name = "E", min = -1, max = 1),
-                                                                                         "S plus" = list(name = "S.plus", min = 0, max = 1),
-                                                                                         "d" = list(name = "d", min = 0, max = 1),
-                                                                                         "initial C" = list(name = "C.init", min = 0, max = 1),
-                                                                                         "lamda" = list(name = "lamda", min = -1, max = 1),
-                                                                                         "inital A" = list(name = "A.init", min = 0, max = 1))
+                                                                          choices = list("E" = 1,
+                                                                                         "S plus" = 2,
+                                                                                         "d" = 3,
+                                                                                         "initial C" = 4,
+                                                                                         "lamda" = 5,
+                                                                                         "inital A" = 6),
+                                                                          selected = 1
                                                               )
                                                        ),
                                                        column(5,
                                                               selectInput("Y", label = "Choose your Y parameter:",
-                                                                          choices = list("S" = "S", "C" = "C")
+                                                                          choices = list("S" = "S", "C" = "C"),
+                                                                          selected = "C"
                                                               )
-                                                       ) 
-                                               )#,
+                                                       )
+                                               ),
                                                
-                                               # plotOutput("bifurcation")
-                                       )
+                                               actionButton("go.bifurc", label = "Make bifurcation diagram!")
+                                       ),
+                                       
+                                       plotOutput("bifurcation")
                               ),
                               
                               tabPanel("Therapy Success",
-                                       "Make stuff here"
+                                       h4("Sorry!"),
+                                       p("Sorry, but this feature is still in development. Why not try another feature first and come back in a couple of weeks for this?")
                               ),
                               
                               tabPanel("Data Download",
-                                       "Make stuff here."
+                                       h4("Sorry!"),
+                                       p("Sorry, but this feature is still in development. Why not try another feature first and come back in a couple of weeks for this?")
                               )
                               
                    )
