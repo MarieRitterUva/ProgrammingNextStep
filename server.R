@@ -71,6 +71,22 @@ shinyServer(function(input, output, session) {
                 
         })
         
+        ####################################################################################
+        
+        # download page
+        
+        output$downloadData <- downloadHandler(
+                for (i in input$no.simulations) {
+                        filename = function() { 
+                                paste(input$dataset, '.csv', sep='') 
+                        },
+                        content = function(file) {
+                                write.csv(datasetInput(), file)
+                        }
+                }
+                
+        )
+        
         
         
         
