@@ -7,6 +7,11 @@ SOLVED: Taken out
 - For loop doesn't loop in server.R
 SOLVED: simple assignment problem
 
+NOTE: At the moment only CalculateParameters and InitializeVectors have default parameters, possibly a problem; possibly set defaults in GUI NOT in program
+SOLVED: defaults in GUI now
+NOTE: also works for Display Logic?
+SOLVED: works
+
 ----------------------------------------------------------------------------------------------------------------------------
 
 - For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
@@ -19,10 +24,6 @@ At the moment only one function for all Graphs
 SOLVED: Have option to display only one graphs (also interface is less crowded), 
 NOTE : but possibility to save graphs???
 
-NOTE: At the moment only CalculateParameters and InitializeVectors have default parameters, possibly a problem; possibly set defaults in GUI NOT in program
-SOLVED: defaults in GUI now
-NOTE: also works for Display Logic?
-
 -----------------------------------------------------------------------------------------------------------------------------
 
 NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could be added later quite easily)
@@ -30,6 +31,8 @@ NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could 
 NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
 
 NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted data can be downloaded and code to make graphs can be downloaded
+
+NOTE: 
 
 ---------------------------------------------------------
 
