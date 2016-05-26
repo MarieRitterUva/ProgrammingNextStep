@@ -1,6 +1,7 @@
 ## Programming: The next step - Simulating Addiction with Difference Equations
 ## Marie Ritter - UvA
 
+
 # ToDo: Bifurcation diagrams
 
 # ToDo: Treatment - new display logic
@@ -8,10 +9,8 @@
   # Success output
 
 # ToDo: Write input ifs, error handling, error messages
-# ToDO: Simple GUI input and output
-# ToDo: Display Logic GUI
 # ToDo: Speed of Simulation
-# ToDo: Beautify GUI
+# ToDo: Action Button
 # ToDo: Saving graphs and output
 # ToDo: Manual and Instructions
 # ToDo: Make code citable, check comments, etc.

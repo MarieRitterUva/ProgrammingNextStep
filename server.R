@@ -34,7 +34,7 @@ shinyServer(function(input, output) {
         })
         
         output$success_rate <- renderText({
-                paste("The patient was NOT addicted at the end of ", success.list()$success.percent, "% of simulations.")
+                paste("The patient was NOT addicted at the end ", success.list()$success.percent, "% of the simulations.")
         })
         
         

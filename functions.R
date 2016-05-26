@@ -221,45 +221,45 @@ MakeGraphs <- function (graph.type, graph.success, output.addiction, success.lis
                 y <- output.addiction[[a]][[1]]$C
                 ytitle <- "C(t)"
                 g.title <- "Craving over time"
-                y.lim <- c(0, S.plus)
+                y.lim <- c(0, max(y))
         } else if (graph.type == 3) {
                 y <- output.addiction[[a]][[1]]$S
                 ytitle <- "S(t)"
                 g.title <- "Self-control over time"
-                y.lim <- numeric()
+                y.lim <- c(0, S.plus)
         } else if (graph.type == 4) {
                 y <- output.addiction[[a]][[1]]$V
                 ytitle <- "V(t)"
                 g.title <- "Vulnerability over time"
                 y.lim <- c(0,1)
+        } else if (graph.type == 6) {
+                y <- output.addiction[[a]][[1]]$V
+                ytitle <- "V(t) and S(t)"
+                g.title <- "Vulnerability V(t) and Self-Control S(t) over time"
+                y.lim <- c(0,1)
+                y1 <- output.addiction[[a]][[1]]$S
+                g.legend <- c("S(t)", "V(t)")
+        } else if (graph.type == 5) {
+                y <- output.addiction[[a]][[1]]$A
+                ytitle <- "A(t) and C(t)"
+                g.title <- "Addictive acts A(t) and craving C(t) over time"
+                y.lim <- c(0,1)
+                y1 <- output.addiction[[a]][[1]]$C
+                g.legend <- c("C(t)", "A(t)")
         }
+        
+        
         
         plot(x, y, bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-             type = "l", ylab = ytitle, ylim = y.lim, main = g.title)
+             type = "l", ylab = ytitle, ylim = y.lim, main = g.title, cex.lab = 1.5)
         
-        
-        # DOUBLE PLOTS
-        # S and V
-        if (graph.type == 6) {
-                plot(list.output[[a]][[1]]$t, list.output[[a]][[1]]$V,
-                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-                     type = "l", ylab = "V(t) and S(t)",
-                     main = "Vulnerability V(t) and Self-Control S(t) over time")
-                lines(list.output[[a]][[1]]$t, list.output[[a]][[1]]$S,
-                      lty = 2, lwd = 2)
-                legend("bottomright", legend = c("S(t)", "V(t"), lty = c(2, 1), lwd = 2)
+        if (graph.type == 5 | graph.type == 6) {
+                lines(x, y1, lty = 2, lwd = 2)
+                legend("bottomright", legend = g.legend, lty = c(2, 1), lwd = 2)
         }
         
-        # A and C
-        if (graph.type == 5) {
-                plot(list.output[[a]][[1]]$t, list.output[[a]][[1]]$A,
-                     bty = "n", las = 1, xlab = "Time (in weeks)", lwd = 2,
-                     type = "l", ylab = "A(t) and C(t)",
-                     main = "Addictive acts A(t) and craving C(t) over time")
-                lines(list.output[[a]][[1]]$t, list.output[[a]][[1]]$C,
-                      lty = 2, lwd = 2)
-                legend("bottomright", legend = c("C(t)", "A(t"), lty = c(2, 1), lwd = 2)
-        }
+        
+        
 }
 
 

@@ -3,13 +3,15 @@ library(shiny)
 # ui.R
 # GUI for the whole program
 
-shinyUI(navbarPage("",
+shinyUI(navbarPage("", 
+                   inverse = TRUE,
+                   windowTitle = "SADE",
                    
                    tabPanel("Basic Simulation",
                             
                             titlePanel("Basic Simulation"),
                             
-                            h4("Please visit the Instructions tab to learn about how to use this program!"),
+                            h4("Please visit the Instructions tab to learn how you can use this program!"),
                             
                             # Tests
                             # tableOutput("test"),
@@ -17,48 +19,46 @@ shinyUI(navbarPage("",
                             
                             sidebarLayout(
                                     sidebarPanel(
-                                            numericInput("q", label = "q", value = 0.8),
-                                            sliderInput("E.init", label = "initial E", value = 0,
-                                                        min = -1, max = 1, step = 0.05),
-                                            sliderInput("S.plus", label = "S max", value = 0.5,
-                                                        min = 0, max = 1, step = 0.05),
-                                            sliderInput("d", label = "d", value = 0.2,
-                                                        min = 0, max = 1, step = 0.05),
-                                            sliderInput("C.init", label = "initial C", value = 0,
-                                                        min = 0, max = 1, step = 0.05),
-                                            sliderInput("A.init", label = "initial addictive acts", value = 0.4,
-                                                        min = 0, max = 0.8, step = 0.05),
-                                            numericInput("lamda.init", label = "inital lamda", value = 0.5),
-                                            numericInput("weeks", label = "No. of weeks", value = 25,
-                                                         step = 1, min = 1, max = 1000),
-                                            numericInput("no.simulations", label = "No. of simulations",
-                                                         value = 100, step = 1, min = 0, max = 3000)
-                                            
+                                            checkboxInput("custom", label = "Do you want to customize the parameters?",
+                                                          value = FALSE),
+                                            conditionalPanel("input.custom == 1", 
+                                                             numericInput("q", label = "q", value = 0.8),
+                                                             sliderInput("E.init", label = "initial E", value = 0,
+                                                                         min = -1, max = 1, step = 0.05),
+                                                             sliderInput("S.plus", label = "S max", value = 0.5,
+                                                                         min = 0, max = 1, step = 0.05),
+                                                             sliderInput("d", label = "d", value = 0.2,
+                                                                         min = 0, max = 1, step = 0.05),
+                                                             sliderInput("C.init", label = "initial C", value = 0,
+                                                                         min = 0, max = 1, step = 0.05),
+                                                             sliderInput("A.init", label = "initial addictive acts", value = 0.4,
+                                                                         min = 0, max = 0.8, step = 0.05),
+                                                             numericInput("lamda.init", label = "inital lamda", value = 0.5),
+                                                             numericInput("weeks", label = "No. of weeks", value = 25,
+                                                                          step = 1, min = 1, max = 1000),
+                                                             numericInput("no.simulations", label = "No. of simulations",
+                                                                          value = 100, step = 1, min = 0, max = 3000)
+                                            )
                                     ),
                                     
                                     mainPanel(
                                             wellPanel(
-                                                    h4("Output Options"),
-                                                    checkboxInput("ds", label = "Display success output"),
-                                                    helpText("Out of all simulation runs, how often is patient addicted at the end."),
-                                                    br(),
                                                     selectInput("graph.type", label = "Graph Type",
                                                                 choices = list("A over time" = 1, "C over time" = 2,
                                                                                "S over time" = 3, "V over time" = 4,
                                                                                "A & C over time" = 5, "S & V over time" = 6)),
+                                                    checkboxInput("ds", label = "Display success output: Percent of simulation runs in which the patient is ``clean'' at the end."),
                                                     checkboxInput("graph.success", label = "Display successful run",
                                                                   value = 1),
-                                                    helpText("Display a simulation where a participant is NOT addicted at the end.")
-                                                    
+                                                    br(),
+                                                    conditionalPanel("input.ds != 0",
+                                                                     wellPanel(
+                                                                             h4(textOutput("success_rate"))
+                                                                     )
+                                                    )
                                             ),
                                             
-                                            plotOutput("time.plot"),
-                                            
-                                            conditionalPanel("input.ds != 0",
-                                                             wellPanel(
-                                                                     h4(textOutput("success_rate"))
-                                                             )
-                                            )
+                                            plotOutput("time.plot")
                                     )
                             )
                    ),
