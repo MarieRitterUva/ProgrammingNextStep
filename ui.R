@@ -11,7 +11,8 @@ shinyUI(navbarPage("",
                             
                             h4("Please visit the Instructions tab to learn about how to use this program!"),
                             
-                            textOutput("test"),
+                            tableOutput("test"),
+                            # textOutput("test"),
                             
                             sidebarLayout(
                                     sidebarPanel(
@@ -47,15 +48,15 @@ shinyUI(navbarPage("",
                                                     checkboxInput("graph.success", label = "Display successful run",
                                                                   value = TRUE),
                                                     helpText("Display a simulation where a participant is NOT addicted at the end.")
-                                                            
-                                                    )#,
+                                                    
+                                            )#,
                                             
-                                           # plotOutput("time.plot"),
+                                            # plotOutput("time.plot"),
                                             
-                                           # textOutput("success.rate")
-                                            )
+                                            # textOutput("success.rate")
                                     )
-                            ),
+                            )
+                   ),
                    
                    tabPanel("Parameters Explained",
                             h4("A"),

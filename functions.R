@@ -47,7 +47,7 @@ InitializeVectors <-
                 
                 addiction.all <- logical(no.simulations)
                 
-                return(list(Crav = Crav, S = S, E = E, lamda = lamda, cues = cues, V = V, A = A, addiction.end = addiction.end))
+                return(list(Crav = Crav, S = S, E = E, lamda = lamda, cues = cues, V = V, A = A, addiction.all = addiction.all))
         }
 
 # Initialize list for datastorage
@@ -62,15 +62,15 @@ InitializeList <- function () {
 # Simulate C, S, V, and A - core process
 # takes list "vectors" from InitializeVectors and vector "parameters" CalculateParameters, and input from GUI
 # returns list with simulated parameters
-SimulateAddictionComponents <- function (vectors, parameters, S.plus, q, weeks) {
+SimulateAddictionComponents <- function (vectors, parameters, S.plus, q, weeks, d) {
         
-        Crav <- vectors[[1]]
-        S <- vectors[[2]]
-        E <- vectors[[3]]
-        lamda <- vectors[[4]]
-        cues <- vectors[[5]]
-        V <- vectors[[6]]
-        A <- vectors [[7]]
+        Crav <- vectors$Crav
+        S <- vectors$S
+        E <- vectors$E
+        lamda <- vectors$lamda
+        cues <- vectors$cues
+        V <- vectors$V
+        A <- vectors$A
         
         p <- parameters[1]
         k <- parameters[2]
@@ -125,7 +125,7 @@ BuildOutputDataframe <- function (weeks, simulation, vectors) {
         S <- simulation$S
         V <- simulation$V
         E <- vectors$E
-        lamda < vectors$lamda
+        lamda <- vectors$lamda
         
         output <- data.frame("t" = (1: (weeks+1))-1,  "A" = A, "C" = Crav, "S" = S,
                              "E" = E, "lamda" = lamda, "cues" = cues, "V" = V)
@@ -139,9 +139,9 @@ BuildOutputDataframe <- function (weeks, simulation, vectors) {
 BuildOutputList <- function (df.output, simulation, list.output) {
         addiction <- simulation$addiction
         
-        output.success <- list(df.output, addiction)  # includes success data
-        output.addition <- c(list.output, list(output.success))  # adds the new data to the list
-        return(output.addition)
+        output.w.success <- list(df.output, addiction)  # includes success data
+        list.output <- c(list.output, list(output.w.success))  # adds the new data to the list
+        return(list.output)
 }
 
 
@@ -150,17 +150,20 @@ BuildOutputList <- function (df.output, simulation, list.output) {
 # takes input from GUI, list "vectors" from InitializeVectors, vector "parameters" from
 # CalculateParameters, and list "list.output" from InitializeList
 # returns list "output.addiction"
-SimulateMultiple <- function (no.simulations, vectors, parameters, S.plus, q, weeks, list.output) {
+SimulateMultiple <- function (no.simulations, vectors, parameters, S.plus, q, weeks, d, list.output) {
         
         for (i in 1:no.simulations) {
-                SimulateAddictionComponents(vectors, parameters, S.plus, q, weeks)  # returns list "simulation"
-                
-                BuildOutputDataframe(weeks, simulation, vectors)  # returns "df.outout"
-                
-                BuildOutputList(df.output, simulation, list.output)  # returns "output.addiction"
-                
-                return(output.addiction)
+                        thisi <- i
+                        
+                        simulation <- SimulateAddictionComponents(vectors, parameters, S.plus, q, weeks, d)  # returns list "simulation"
+                        
+                        df.output <- BuildOutputDataframe(weeks, simulation, vectors)  # returns "df.outout"
+                        
+                        list.output <-BuildOutputList(df.output, simulation, list.output)  # returns "output.addiction"
+                        
         }
+        
+        return(list.output)
 }
 
 

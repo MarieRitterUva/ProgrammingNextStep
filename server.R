@@ -6,21 +6,26 @@ source("functions.R")
 
 shinyServer(function(input, output) {
         
-        calc.paras <- reactive({ CalculateParameters(input$d, input$S.plus, input$q) })
+        parameters <- reactive({
+                CalculateParameters(input$d, input$S.plus, input$q)
+        })
         
         
-        initd.vectors <- reactive({ InitializeVectors(input$C.init, input$S.plus, input$E.init, input$lamda.init,
-                                                      input$A.init, input$weeks, input$no.simulations, input$d)
+        vectors <- reactive({
+                InitializeVectors(input$C.init, input$S.plus, input$E.init, input$lamda.init,
+                                  input$A.init, input$weeks, input$no.simulations, input$d)
         })
         
         list.output <- InitializeList()
         
+        output.addiction <- reactive({
+                SimulateMultiple(input$no.simulations, vectors(), parameters(), input$S.plus, input$q,
+                                 input$weeks, input$d, list.output)  
+        }) 
         
         
-        
-        
-        output$test <- renderPrint({ calc.paras() })
-        
+        output$test <- renderTable({ output.addiction()[[50]][[1]] })
+        # output$test <- renderPrint({ str(output.addiction()) })
         # return(list(list.output = list.output, addiction.end = addiction.end))
         
         
@@ -36,6 +41,6 @@ shinyServer(function(input, output) {
         #                paste("The patient was NOT addicted in ", success.percent, "% of simulations.")
         #        })
         
-        }
-        
+}
+
 )
