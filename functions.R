@@ -265,71 +265,65 @@ MakeGraphs <- function (graph.type, graph.success, output.addiction, success.lis
 
 
 # Bifurcation diagrams
+# takes list "bifurc", Y ("C" or "S"), input from GUI
 
-MakeBifurcationDiagram <- function (bifurc, Y) {
+MakeBifurcationDiagram <- function (bifurc, Y, S.plus, q, d, C.init, E.init, lamda.init, A.init) {
         
-        if (bifurc == "E" & Y == "C") {
+        min <- bifurc[[2]]
+        max <- bifurc[[3]]
+        
+        if (bifurc[[1]] == "A.init") {
+                max <- q
+        }
+        
+        bifur.sequence <- seq(min, max, 0.05)  # sequence for bifurc
+        
+        # Arguments to be called in CalculateParameters
+        args1 <- list(d = d, S.plus = S.plus, q = q)
+        
+        # argument list to be used in InitializeVectors
+        args2 <- list(C.init = C.init, S.plus = S.plus, E.init = E.init,
+                     lamda.init = lamda.init, A.init = A.init, d = d)
+        
+        # argument list to be used in SimulateAddictionComponents
+        args3 <- list(vectors = vectors, parameters = parameters, S.plus = S.plus, q = q, weeks = weeks, d = d)
+        
+        if (bifurc[[1]] == "E")
+        
                 
-                min <- -1
-                max <- 1
-                bifur.sequence <- seq(min, max, 0.05)  # sequence for E's
                 
-                # create empty plot
-                plot(c(min, max), c(0, 1), type = "n", pch = ".", xlab = bifurc, ylab = Y,
-                     bty = "n", las = 1)
+        # set to take either C or S from dataframe
+        if (Y == "C") {
+                y <- 3
+                y.lim <- c(0, 1)
+        } else if (Y == "S") {
+                y <- 4
+                y.lim <- c(0, S.plus)
+        }
+        
+        weeks <- 500  # simulate total 500, later burn 250
+        no.simulations <- 1  # 1 time for each bifurcation parameter step
+        
+        # create empty plot
+        plot(c(min, max), c(0, 0), type = "n", pch = ".", xlab = bifurc, ylab = Y,
+             bty = "n", las = 1, ylim = y.lim)
+        
+        
+        for (i in bifurc.sequence) {
+                thisi <- i
                 
-                for (i in bifur.sequence) {
-                        
-                        weeks.bifur <- 500  # simulate 500, burn 250
-                        
-                        CalculateParameters(d, S.plus, q)
-                        
-                        InitializeVectors(C.init, S.plus, i, lamda.init, A.init, weeks.bifur)
-                        
-                        InitializeList()
-                        
-                        SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks.bifur, b, d, p, S.plus, h, k, q)
-                        
-                        BuildOutputDataframe(weeks.bifur, A, Crav, S, E, lamda, cues, V)
-                        
-                        BuildOutputList()
-                        
-                        # simulate 500, burn 250
-                        for (j in 250:weeks.bifur) {  
-                                points(i, list.output[[1]][[1]]$C[j])
-                        }
-                        
+                parameters <- do.call(CalculateParameters, args1)  # returns "parameters"
+                
+                vectors <- do.call(InitializeVectors, args2)  # returns "vectors"
+                
+                simulation <- do.call(SimulateAddictionComponents, args3)  # returns list "simulation"
+                
+                df.output <- BuildOutputDataframe(weeks, simulation, vectors)  # returns "df.outout"
+                
+                # burn first 250 of previously 500 created, plot last 250
+                for (j in 250:weeks) {  
+                        points(i, df.output[j, y])
                 }
                 
-        } else if (bifurc == "E" & Y == "S") {
-                min <- -1
-                max <- 1
-                bifur.sequence <- seq(min, max, 0.05)  # sequence for E's
-                
-                # create empty plot
-                plot(c(min, max), c(0, 1), type = "n", pch = ".", xlab = bifurc, ylab = Y,
-                     bty = "n", las = 1)
-                
-                for (i in bifur.sequence) {
-                        
-                        weeks.bifur <- 500  # simulate 500, burn 250
-                        
-                        CalculateParameters(d, S.plus, q)
-                        
-                        InitializeVectors(C.init, S.plus, i, lamda.init, A.init, weeks.bifur)
-                        
-                        InitializeList()
-                        
-                        SimulateAddictionComponents(Crav, S, V, A, E, lamda, cues, weeks.bifur, b, d, p, S.plus, h, k, q)
-                        
-                        BuildOutputDataframe(weeks.bifur, A, Crav, S, E, lamda, cues, V)
-                        
-                        BuildOutputList()
-                        
-                        # simulate 500, burn 250
-                        for (j in 250:weeks.bifur) {  
-                                points(i, list.output[[1]][[1]]$S[j])
-                        }
-                }
         }
 }

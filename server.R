@@ -5,6 +5,7 @@ source("functions.R")
 # server.R
 
 shinyServer(function(input, output) {
+
         
         parameters <- reactive({
                 CalculateParameters(input$d, input$S.plus, input$q)

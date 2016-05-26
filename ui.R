@@ -120,7 +120,29 @@ shinyUI(navbarPage("",
                    
                    navbarMenu("More",
                               tabPanel("Bifurcation Diagram",
-                                       "Make Bifurcs here."
+                                       h3("Create Bifurcation diagram"),
+                                       wellPanel(
+                                               "To create a bifurction diagram please choose from these two options and hit submit.",
+                                               fluidRow(
+                                                       column(5,
+                                                              selectInput("bifurc", label = "Choose a bifurcation parameter:",
+                                                                          choices = list("E" = list(name = "E", min = -1, max = 1),
+                                                                                         "S plus" = list(name = "S.plus", min = 0, max = 1),
+                                                                                         "d" = list(name = "d", min = 0, max = 1),
+                                                                                         "initial C" = list(name = "C.init", min = 0, max = 1),
+                                                                                         "lamda" = list(name = "lamda", min = -1, max = 1),
+                                                                                         "inital A" = list(name = "A.init", min = 0, max = 1))
+                                                              )
+                                                       ),
+                                                       column(5,
+                                                              selectInput("Y", label = "Choose your Y parameter:",
+                                                                          choices = list("S" = "S", "C" = "C")
+                                                              )
+                                                       ) 
+                                               )#,
+                                               
+                                               # plotOutput("bifurcation")
+                                       )
                               ),
                               
                               tabPanel("Therapy Success",
