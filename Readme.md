@@ -19,16 +19,22 @@ The complete program includes the following files:
 
 * function.R  
  File from which functions are sourced.
+ 
 * server.R  
  Actual program
+ 
 * ui.R  
  Graphical interface
+ 
 * Readme.md  
  The README file
+ 
 * DESCRIPTION  
  Tags and information for the showcase mode.
+ 
 * Bugs.txt  
  Bug tracking file from developer
+ 
 * www  
  Image files
  * logo-uva.png
