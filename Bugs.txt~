@@ -4,22 +4,29 @@ SOLVED: Took global assignment out of For loop, extra in function (possibly ther
 At the moment only one function for all Graphs
 !! Problem: Can Shiny take multiple graphs? If not, need to be saved somewhere (png --> Can Shiny save and access)
 !! Maybe better to have separate functions for speed?
-SOLVED: Have option to display only one graphs (also interface is less crowded), but possibility to save graphs
+SOLVED: Have option to display only one graphs (also interface is less crowded), 
+NOTE : but possibility to save graphs???
 
 NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
-!!!! Please take out after testing phases
+SOLVED: Taken out
 
 NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could be added later quite easily)
 
 NOTE: At the moment only CalculateParameters and InitializeVectors have default parameters, possibly a problem; possibly set defaults in GUI NOT in program
+SOLVED: defaults in GUI now
+NOTE: also works for Display Logic?
 
 NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
 
 NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted data can be downloaded and code to make graphs can be downloaded
 
+- For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
+
+- For loop doesn't loop in server.R
+SOLVED: simple assignment problem
 
 ---------------------------------------------------------
-- Parameter boundaries? d between 0 and 1 (make note in GUI that most realistic lies around .2)
+
 - Bifurcation diagrams (simulate many times (burn first samples) -> Plot (like RLABS video YouTube)
   --> Possibly make different tab for Bifurcation diagrams (start with E as bifurcation parameter, possibility to use another parameter)
 
