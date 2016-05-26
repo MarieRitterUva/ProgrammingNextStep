@@ -1,29 +1,35 @@
 - For loop in SimulateAddictionComponents() stops after executing the first few steps of the equation
 SOLVED: Took global assignment out of For loop, extra in function (possibly there is a smarter way?) --> works now
 
+NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
+SOLVED: Taken out
+
+- For loop doesn't loop in server.R
+SOLVED: simple assignment problem
+
+----------------------------------------------------------------------------------------------------------------------------
+
+- For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
+
+-----------------------------------------------------------------------------------------------------------------------------
+
 At the moment only one function for all Graphs
 !! Problem: Can Shiny take multiple graphs? If not, need to be saved somewhere (png --> Can Shiny save and access)
 !! Maybe better to have separate functions for speed?
 SOLVED: Have option to display only one graphs (also interface is less crowded), 
 NOTE : but possibility to save graphs???
 
-NOTE: There is still a set.seed(1) in SimulateAddictionComponents()
-SOLVED: Taken out
-
-NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could be added later quite easily)
-
 NOTE: At the moment only CalculateParameters and InitializeVectors have default parameters, possibly a problem; possibly set defaults in GUI NOT in program
 SOLVED: defaults in GUI now
 NOTE: also works for Display Logic?
 
+-----------------------------------------------------------------------------------------------------------------------------
+
+NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could be added later quite easily)
+
 NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
 
 NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted data can be downloaded and code to make graphs can be downloaded
-
-- For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
-
-- For loop doesn't loop in server.R
-SOLVED: simple assignment problem
 
 ---------------------------------------------------------
 
