@@ -23,23 +23,24 @@ shinyServer(function(input, output) {
                                  input$weeks, input$d, list.output)  
         }) 
         
-        
-        output$test <- renderTable({ output.addiction()[[50]][[1]] })
-        # output$test <- renderPrint({ str(output.addiction()) })
-        # return(list(list.output = list.output, addiction.end = addiction.end))
-        
+        success.list <- reactive({
+                CalculateSuccess(output.addiction(), input$no.simulations)
+        })
         
         
-        #        reactive({ CalculateSuccess() })
-        #        
-        #        
-        #        output$time.plot <- renderPlot({
-        #                MakeGraphs(input$graph.type, input$graph.success)
-        #        })
-        #        
-        #        output$success.rate <- renderText({
-        #                paste("The patient was NOT addicted in ", success.percent, "% of simulations.")
-        #        })
+        
+        output$time.plot <- renderPlot({
+                MakeGraphs(input$graph.type, input$graph.success, output.addiction(), success.list(), input$q, input$S.plus)
+        })
+        
+        output$success_rate <- renderText({
+                paste("The patient was NOT addicted at the end of ", success.list()$success.percent, "% of simulations.")
+        })
+        
+        
+        # Tests
+        # output$test <- renderTable({ output.addiction()[[50]][[1]] })
+        # output$test <- renderPrint({ success.list() })
         
 }
 

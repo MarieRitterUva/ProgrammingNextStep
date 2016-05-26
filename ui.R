@@ -11,7 +11,8 @@ shinyUI(navbarPage("",
                             
                             h4("Please visit the Instructions tab to learn about how to use this program!"),
                             
-                            tableOutput("test"),
+                            # Tests
+                            # tableOutput("test"),
                             # textOutput("test"),
                             
                             sidebarLayout(
@@ -38,7 +39,7 @@ shinyUI(navbarPage("",
                                     mainPanel(
                                             wellPanel(
                                                     h4("Output Options"),
-                                                    checkboxInput("display.success", label = "Display success output"),
+                                                    checkboxInput("ds", label = "Display success output"),
                                                     helpText("Out of all simulation runs, how often is patient addicted at the end."),
                                                     br(),
                                                     selectInput("graph.type", label = "Graph Type",
@@ -46,14 +47,18 @@ shinyUI(navbarPage("",
                                                                                "S over time" = 3, "V over time" = 4,
                                                                                "A & C over time" = 5, "S & V over time" = 6)),
                                                     checkboxInput("graph.success", label = "Display successful run",
-                                                                  value = TRUE),
+                                                                  value = 1),
                                                     helpText("Display a simulation where a participant is NOT addicted at the end.")
                                                     
-                                            )#,
+                                            ),
                                             
-                                            # plotOutput("time.plot"),
+                                            plotOutput("time.plot"),
                                             
-                                            # textOutput("success.rate")
+                                            conditionalPanel("input.ds != 0",
+                                                             wellPanel(
+                                                                     h4(textOutput("success_rate"))
+                                                             )
+                                            )
                                     )
                             )
                    ),
