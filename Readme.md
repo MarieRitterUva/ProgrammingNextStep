@@ -50,4 +50,4 @@ Further information on the program can be obtained fromt the developer: <marie.r
 
 ##### Reference
 
-Grasman, J., Grasman, R. P. P. P., & van der Maas (2016). The dynamics of addiction: craving versus self-control. Manuskript submitted for revision.
+Grasman, J., Grasman, R. P. P. P., & van der Maas, H. L. J. (2016). _The dynamics of addiction: craving versus self-control_. Manuscript submitted for revision.
