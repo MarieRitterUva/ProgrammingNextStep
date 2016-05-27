@@ -34,14 +34,13 @@ The complete program includes the following files:
  
 * Bugs.txt  
  Bug tracking file from developer
- 
-* www  
- Image files  
- * logo-uva.png
 
-#### Bugs
+#### Bugs and Features in Developments
 
-Known bugs can be seen in the Bugs.txt file.
+While the simulation works fine for most parameters, sometimes S and C fall below 0 - something that should not be possible given the equations by Grasman, Grasman, and van der Maas (2016) and something that is not realistic either. A fix to this bug is currently in development.
+
+The _Therapy Success_ tab of this app is still in development.  
+Currently SimulADE was only tested with alcohol addiction. The paper by Grasman, Grasman, and van der Maas (2016) also includes a slightly altered model for nicotine addiction that can be implemented in the future. Apart from that, theoretical work might be needed first.
 
 #### Further information
 
