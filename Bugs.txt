@@ -30,6 +30,9 @@ SOLVED: Bifurcation diagrams work now
 NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted, data can be downloaded and code to make graphs can be downloaded
 SOLVED: In instructions
 
+NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
+SOLVED: implemented now
+
 ----------------------------------------------------------------------------------------------------------------------------
 
 - For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
@@ -40,10 +43,6 @@ NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could 
 --> caution added in Instructions
 
 NOTE: Therapy success needs to be implemented
-
-NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
-
-NOTE: Check Readme.md again before upload
 
 ---------------------------------------------------------
 
