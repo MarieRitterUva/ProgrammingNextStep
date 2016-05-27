@@ -17,7 +17,19 @@ For further instructions, users can always visit the _Instructions_ tab.
 
 The complete program includes the following files:
 
-* function.R  
+* Bugs.txt  
+ Bug tracking file from developer
+ 
+* DESCRIPTION  
+ Tags and information for the showcase mode.
+ 
+* LICENSE.txt
+ License for this program
+ 
+* Readme.md  
+ The README file
+
+* functions.R  
  File from which functions are sourced.
  
 * server.R  
@@ -26,14 +38,6 @@ The complete program includes the following files:
 * ui.R  
  Graphical interface
  
-* Readme.md  
- The README file
- 
-* DESCRIPTION  
- Tags and information for the showcase mode.
- 
-* Bugs.txt  
- Bug tracking file from developer
 
 #### Bugs and Features in Developments
 
