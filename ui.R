@@ -12,11 +12,7 @@ shinyUI(navbarPage("",
                             titlePanel("Basic Simulation"),
                             
                             h4("Please visit the Instructions tab to learn how you can use this program!"),
-                            
-                            # Tests
-                            # tableOutput("test"),
-                            # textOutput("test"),
-                            
+                           
                             sidebarLayout(
                                     sidebarPanel(
                                             checkboxInput("custom", label = "Do you want to customize the parameters?",
@@ -149,7 +145,8 @@ shinyUI(navbarPage("",
                               em("Customize parameters"), ", and get going. The graphs will update immediately, but note that unrealistic",
                               "inputs might also cause weird outputs - data doesn't think for itself (what my old stats teacher used to say).",
                               "While changing parameters back and forth have a look at the ", em("Parameters Explained"), " tab to learn what",
-                              "you are changing and where in the model this affects something."),
+                              "you are changing and where in the model this affects something. If you want to go back to default, click the ",
+                              em("Reset"), " button."),
                             p("Note that the graph only displays the data from one simulation, the first to be exact. Hence, it might be that ",
                               "it is one not representative of the other simulations. At the moment, the program does not provide an option to ",
                               "select another simulation, but you can download all simulation files in the ", em("Downloads"), " tab. If you liked",

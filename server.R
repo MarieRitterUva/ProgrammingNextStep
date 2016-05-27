@@ -4,15 +4,48 @@ source("functions.R")
 
 # server.R
 
+test.success <- function(input, success.list) {
+        if (input == TRUE) {
+                if (length(success.list[[2]]) != 0) {
+                        NULL
+                } else {
+                        "There are no successful runs to display!"
+                }
+        } else if ( input == FALSE) {
+                if (length(success.list[[3]]) != 0) {
+                        NULL
+                } else {
+                        "There are no unsuccessful runs to display!"
+                }
+        }
+}
+
 shinyServer(function(input, output, session) {
         
         
         parameters <- reactive({
+                
+                validate(
+                        need(input$q != "", "Please enter a value for ``q´´!"),
+                        need(input$q > 0, "Please enter a positive value for ``q´´!")
+                )
+                
                 CalculateParameters(input$d, input$S.plus, input$q)
         })
         
         
         vectors <- reactive({
+                
+                validate(
+                        need(input$lamda.init != "", "Please enter a value for ``initial lamda´´!"),
+                        need(input$weeks != "", "Please enter a value for ``weeks´´!"),
+                        need(input$no.simulations != "", "Please enter a number for ``No. of simulations´´!"),
+                        need(input$weeks > 0, "Please enter a positive value for ``weeks´´!"),
+                        need(input$weeks < 1001, "Please enter a smaller value for ``weeks´´!"),
+                        need(input$no.simulations > 0, "Please enter a positive value for ``No. of simulations´´!"),
+                        need(input$no.simulations < 3001, "Please enter a smaller value for ``No. of simulations´´!")
+                )
+                
                 InitializeVectors(input$C.init, input$S.plus, input$E.init, input$lamda.init,
                                   input$A.init, input$weeks, input$no.simulations, input$d)
         })
@@ -29,8 +62,13 @@ shinyServer(function(input, output, session) {
         })
         
         
-        
         output$time.plot <- renderPlot({
+                
+                
+                validate(
+                        test.success(input$graph.success, success.list())
+                )
+                
                 MakeGraphs(input$graph.type, input$graph.success, output.addiction(), success.list(), input$q, input$S.plus)
         })
         
