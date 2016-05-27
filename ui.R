@@ -154,12 +154,28 @@ shinyUI(navbarPage("",
                               
                               tabPanel("Therapy Success",
                                        h4("Sorry!"),
-                                       p("Sorry, but this feature is still in development. Why not try another feature first and come back in a couple of weeks for this?")
+                                       p("Sorry, but this feature is still in development.",
+                                         " Why not try another feature first and come back in a couple of weeks for this?")
                               ),
                               
-                              tabPanel("Data Download",
-                                       h4("Sorry!"),
-                                       p("Sorry, but this feature is still in development. Why not try another feature first and come back in a couple of weeks for this?")
+                              tabPanel("Downloads",
+                                       wellPanel(
+                                               h4("Data Download"),
+                                               p("You can dowload the data you just simulated as a *.zip file. This",
+                                                 "file will contain multiple *.csv files - one for each of the simulation runs. ",
+                                                 "So if you chose", em("no.simulations"), "to be 100, you will have 100 *.zip files,",
+                                                 "which you can use to create your own plot, run analyses, or just store for later usage.",
+                                                 "Have fun with them!"),
+                                               downloadButton("downloadData", "Give me those files! - Download")
+                                       ),
+                                       wellPanel(
+                                               h4("Plot Download"),
+                                               p("If you liked the plot you produced, you can download it here. Note that",
+                                                 "you can only download the plot from ", em("Basic Simulation"), "at this",
+                                                 "point and that you have to set all parameters on the ", em("Basic Simulation"),
+                                                 "page ", strong("before"), "you download it here."),
+                                               downloadButton("downloadPlot", "I want the plot! - Download")
+                                       )
                               )
                               
                    )

@@ -76,18 +76,34 @@ shinyServer(function(input, output, session) {
         # download page
         
         output$downloadData <- downloadHandler(
-                for (i in input$no.simulations) {
-                        filename = function() { 
-                                paste(input$dataset, '.csv', sep='') 
-                        },
-                        content = function(file) {
-                                write.csv(datasetInput(), file)
+                filename = "data.zip",
+                content = function(fname) {
+                        tmpdir <- tempdir()
+                        setwd(tempdir())
+                        print(tempdir())
+                        
+                        fs <- paste("data", 1:input$no.simulations, ".csv", sep = "")
+                        for (i in 1:input$no.simulations) {
+                                thisi <- i
+                                write.csv(output.addiction()[[thisi]][[1]], file = paste("data", thisi, ".csv", sep = ""))
                         }
-                }
-                
+                        print (fs)
+                        
+                        zip(zipfile=fname, files=fs)
+                        if(file.exists(paste0(fname, ".zip"))) {
+                                file.rename(paste0(fname, ".zip"), fname)
+                        }
+                },
+                contentType = "application/zip"
         )
         
-        
+        output$downloadPlot <- downloadHandler(
+                filename = function() { paste("plot_", input$graph.type,".png", sep = "") },
+                content = function(file) {
+                        png(file, width = 650)
+                        print(MakeGraphs(input$graph.type, input$graph.success, output.addiction(), success.list(), input$q, input$S.plus))
+                        dev.off()
+                })
         
         
 }
