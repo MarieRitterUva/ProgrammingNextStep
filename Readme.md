@@ -1,6 +1,6 @@
 ## SimulADE - Simulating Addiction with Difference Equations
 
-This is a program that was developed by Marie Ritter on the basis of a paper by Grasman, Grasman, and van der Maas (submitted for review). The program implements the model proposed in this paper and provides a graphical user interface (GUI) to interact with the program. From input parameters the program simulates the progress of addiction and creates graphs over time as well as a bifurcation diagram (in development). Furthermore, the program provides the option to estimate how successful a therapy might be when entering parameters for both the therapy time as well as the time afterwards under the tab _Therapy Success_ (in development).  
+This is a program that was developed by Marie Ritter on the basis of a paper by Grasman, Grasman, and van der Maas (submitted for review). The program implements the model proposed in this paper and provides a graphical user interface (GUI) to interact with the program. From input parameters the program simulates the progress of addiction and creates graphs over time as well as a bifurcation diagram. Furthermore, the program provides the option to estimate how successful a therapy might be when entering parameters for both the therapy time as well as the time afterwards under the tab _Therapy Success_ (in development).  
 Lastly, users can download the produced data file from the last simulation in order to inspect it further.
 
 #### Development Circumstances
@@ -36,7 +36,7 @@ The complete program includes the following files:
  Bug tracking file from developer
  
 * www  
- Image files
+ Image files  
  * logo-uva.png
 
 #### Bugs

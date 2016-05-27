@@ -27,6 +27,9 @@ SOLVED: can now save graphs
   --> Possibly make different tab for Bifurcation diagrams (start with E as bifurcation parameter, possibility to use another parameter)
 SOLVED: Bifurcation diagrams work now
 
+NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted, data can be downloaded and code to make graphs can be downloaded
+SOLVED: In instructions
+
 ----------------------------------------------------------------------------------------------------------------------------
 
 - For some reason C settles on one parameter only after a few trials - only one equilibrium not 2!!!
@@ -34,10 +37,11 @@ SOLVED: Bifurcation diagrams work now
 -----------------------------------------------------------------------------------------------------------------------------
 
 NOTE: Program only suitable for alcohol addiction at the moment (Nicotine could be added later quite easily)
+--> caution added in Instructions
+
+NOTE: Therapy success needs to be implemented
 
 NOTE: There needs to be an error when a person wants to see successful/fail graphs where there aren't any
-
-NOTE: Say in GUI that program shows one simulation (the first success/fail simulation) --> if others wanted, data can be downloaded and code to make graphs can be downloaded
 
 NOTE: Check Readme.md again before upload
 
