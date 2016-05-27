@@ -4,6 +4,7 @@ source("functions.R")
 
 # server.R
 
+# for validate() for time.plot output
 test.success <- function(input, success.list) {
         if (input == TRUE) {
                 if (length(success.list[[2]]) != 0) {
@@ -22,9 +23,8 @@ test.success <- function(input, success.list) {
 
 shinyServer(function(input, output, session) {
         
-        
+        # Calculate "hidden" parameters
         parameters <- reactive({
-                
                 validate(
                         need(input$q != "", "Please enter a value for ``q´´!"),
                         need(input$q > 0, "Please enter a positive value for ``q´´!")
@@ -34,8 +34,8 @@ shinyServer(function(input, output, session) {
         })
         
         
+        # Initialize Vectors for simulation
         vectors <- reactive({
-                
                 validate(
                         need(input$lamda.init != "", "Please enter a value for ``initial lamda´´!"),
                         need(input$weeks != "", "Please enter a value for ``weeks´´!"),
@@ -50,21 +50,23 @@ shinyServer(function(input, output, session) {
                                   input$A.init, input$weeks, input$no.simulations, input$d)
         })
         
+        # Initialize list to be filled in simulation
         list.output <- InitializeList()
         
+        # Do actual simulation
         output.addiction <- reactive({
                 SimulateMultiple(input$no.simulations, vectors(), parameters(), input$S.plus, input$q,
                                  input$weeks, input$d, list.output)  
         }) 
         
+        # Calculate success for success_rate
         success.list <- reactive({
                 CalculateSuccess(output.addiction(), input$no.simulations)
         })
         
         
+        # Draw time.plot
         output$time.plot <- renderPlot({
-                
-                
                 validate(
                         test.success(input$graph.success, success.list())
                 )
@@ -72,10 +74,12 @@ shinyServer(function(input, output, session) {
                 MakeGraphs(input$graph.type, input$graph.success, output.addiction(), success.list(), input$q, input$S.plus)
         })
         
+        # Paste together success output
         output$success_rate <- renderText({
                 paste("The patient was NOT addicted at the end ", success.list()$success.percent, "% of the simulations.")
         })
         
+        # Reset button
         observeEvent(input$reset, {
                 updateNumericInput(session, "q", value = 0.8)
                 updateSliderInput(session, "E.init", value = 0)
@@ -93,10 +97,11 @@ shinyServer(function(input, output, session) {
         
         # bifurcation diagram code
         
+        # only run bifurcation when button is clicked
         observeEvent(input$go.bifurc, {
                 
-                
                 output$bifurcation <- renderPlot({
+                        # Display a waiting message
                         withProgress(message = "Please wait. We are making the plot.", {
                                 
                                 MakeBifurcationDiagram(input$bifurc, input$Y, input$S.plus, input$q, input$d,
@@ -113,6 +118,7 @@ shinyServer(function(input, output, session) {
         
         # download page
         
+        # download dataframes
         output$downloadData <- downloadHandler(
                 filename = "data.zip",
                 content = function(fname) {
@@ -135,6 +141,7 @@ shinyServer(function(input, output, session) {
                 contentType = "application/zip"
         )
         
+        # download plot
         output$downloadPlot <- downloadHandler(
                 filename = function() { paste("plot_", input$graph.type,".png", sep = "") },
                 content = function(file) {

@@ -14,6 +14,7 @@ shinyUI(navbarPage("",
                             h4("Please visit the Instructions tab to learn how you can use this program!"),
                            
                             sidebarLayout(
+                                    # Parameter Input
                                     sidebarPanel(
                                             checkboxInput("custom", label = "Do you want to customize the parameters?",
                                                           value = FALSE),
@@ -41,6 +42,7 @@ shinyUI(navbarPage("",
                                     
                                     mainPanel(
                                             wellPanel(
+                                                    # Output parameter input
                                                     selectInput("graph.type", label = "Graph Type",
                                                                 choices = list("A over time" = 1, "C over time" = 2,
                                                                                "S over time" = 3, "V over time" = 4,
@@ -49,6 +51,7 @@ shinyUI(navbarPage("",
                                                     checkboxInput("graph.success", label = "Display successful run",
                                                                   value = 1),
                                                     br(),
+                                                    # Success Output
                                                     conditionalPanel("input.ds != 0",
                                                                      wellPanel(
                                                                              h4(textOutput("success_rate"))
@@ -56,11 +59,13 @@ shinyUI(navbarPage("",
                                                     )
                                             ),
                                             
+                                            # Plot Output
                                             plotOutput("time.plot")
                                     )
                             )
                    ),
                    
+                   # Page to explain parameters
                    tabPanel("Parameters Explained",
                             h4("A"),
                             p("A represents the number of addictive acts of a patient."),
@@ -109,6 +114,7 @@ shinyUI(navbarPage("",
                             br()
                    ),
                    
+                   # Instructions and About
                    tabPanel("Instructions",
                             h2("Welcome to SimulADE!"),
                             br(),
@@ -123,15 +129,15 @@ shinyUI(navbarPage("",
                               "work for other addictions as well but I cannot guarantee it. If this app is developed further, it might include",
                               "options for other addictions."),
                             p("Even though SimulADE now seems like a great thing, it really is only the outer shell of a model by Grasman, Grasman, and van ",
-                              "der Maas (submitted for review). Their paper describes the model in full detail and gives explanations",
+                              "der Maas (2016). Their paper describes the model in full detail and gives explanations",
                               "to the interested reader. The paper's citation is:"),
                             br(),
-                            p("Grasman, J., Grasman, R. P. P. P., & van der Maas (submitted). The dynamics of addiction: craving versus self-control."),
+                            p("Grasman, J., Grasman, R. P. P. P., & van der Maas (2016). The dynamics of addiction: craving versus self-control. Manuscript submitted for revision."),
                             br(),
                             br(),
                             h4("How do I use SimulADE?"),
                             p("You can use SimulADE in multiple ways. You could try to understand the model by Grasman, Grasman, and van der",
-                              "Maas (submitted) better. Or you could be interested in how addictions progress. Or you could just be looking",
+                              "Maas (2016) better. Or you could be interested in how addictions progress. Or you could just be looking",
                               "around for something to do. In any case: You should try to have fun with this app. Try out multiple options",
                               " checkout what this and that does. This is how you will probably get the most out of it. If you are looking",
                               "for further directions - read on."),
@@ -153,7 +159,7 @@ shinyUI(navbarPage("",
                               "the graph that was produced, you can download it there too."),
                             p("If you want to go a step further, check out the ", em("Bifurcation Diagram"), " tab to investigate where the ",
                               "stable states are in this model. For further info on that, delve into the paper by Grasman, Grasman, and van der Maas",
-                              " (submitted)."),
+                              " (2016)."),
                             p("If you want to know more and cannot find info in the paper or on this site, feel free to contact me ",
                               a("via e-mail.", href = "mailto: marie.ritter@student.uva.nl"), "."),
                             br(),
@@ -175,6 +181,7 @@ shinyUI(navbarPage("",
                    navbarMenu("More",
                               tabPanel("Bifurcation Diagram",
                                        h3("Create Bifurcation diagram"),
+                                       # Bifurcation Parameter Input
                                        wellPanel(
                                                "To create a bifurction diagram please choose from these two options and hit submit.",
                                                fluidRow(
@@ -203,12 +210,14 @@ shinyUI(navbarPage("",
                                        plotOutput("bifurcation")
                               ),
                               
+                              # Therapy Simulation
                               tabPanel("Therapy Success",
                                        h4("Sorry!"),
                                        p("Sorry, but this feature is still in development.",
                                          " Why not try another feature first and come back in a couple of weeks for this?")
                               ),
                               
+                              # Download page for data and graph
                               tabPanel("Downloads",
                                        wellPanel(
                                                h4("Data Download"),
